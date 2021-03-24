@@ -12,6 +12,7 @@ import util.exception.CustomerNotFoundException;
 import util.exception.CustomerUsernameExistException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateCustomerException;
 
 /**
  *
@@ -26,8 +27,12 @@ public interface CustomerSessionBeanLocal {
 
     public Customer getCustomerByCustomerId(Long customerId) throws CustomerNotFoundException;
 
-    public Customer retrieveCustomerByUsername(String username) throws CustomerNotFoundException;
-
     public Customer customerLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public void updateCustomer(Customer customer) throws UpdateCustomerException, CustomerNotFoundException;
+
+    public void deleteCustomer(Long customerId) throws CustomerNotFoundException;
+
+    public Customer getCustomerByUsername(String username) throws CustomerNotFoundException;
     
 }

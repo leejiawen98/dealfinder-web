@@ -5,7 +5,11 @@
  */
 package ejb.stateless;
 
+import entity.Deal;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.DealNotFoundException;
+import util.exception.DealQtyInsufficientException;
 
 /**
  *
@@ -13,5 +17,17 @@ import javax.ejb.Local;
  */
 @Local
 public interface DealSessionBeanLocal {
+
+    public List<Deal> retrieveAllDeals();
+
+    public List<Deal> searchDealByName(String searchString);
+
+    public Deal getDealByDealId(Long dealId) throws DealNotFoundException;
+
+    public Deal getDealByDealSerialNum(String serialNum) throws DealNotFoundException;
+
+    public void debitQtyOnHand(Long dealId, Integer qtyToDebit) throws DealQtyInsufficientException, DealNotFoundException;
+
+    public void creditQtyOnHand(Long dealId, Integer qtyToCredit) throws DealNotFoundException;
     
 }

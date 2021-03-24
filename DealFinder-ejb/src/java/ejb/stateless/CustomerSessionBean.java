@@ -5,6 +5,7 @@
  */
 package ejb.stateless;
 
+import entity.Business;
 import entity.Customer;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -14,10 +15,14 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
+import util.exception.BusinessNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.CustomerUsernameExistException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateBusinessException;
+import util.exception.UpdateCustomerException;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -69,7 +74,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     }
 
     @Override
-    public Customer retrieveCustomerByUsername(String username) throws CustomerNotFoundException {
+    public Customer getCustomerByUsername(String username) throws CustomerNotFoundException {
         Query query = em.createQuery("SELECT c FROM Customer c WHERE c.username = :inUsername");
         query.setParameter("inUsername", username);
 
@@ -84,11 +89,12 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     @Override
     public Customer customerLogin(String username, String password) throws InvalidLoginCredentialException {
         try {
-            Customer customer = retrieveCustomerByUsername(username);
-
-            if (customer.getPassword().equals(password)) {
-
+            Customer customer = getCustomerByUsername(username);
+            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + customer.getSalt()));
+            
+            if (customer.getPassword().equals(passwordHash)) {
                 return customer;
+                
             } else {
                 throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
             }
@@ -96,4 +102,31 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
     }
+    
+    @Override
+    public void updateCustomer(Customer customer) throws UpdateCustomerException, CustomerNotFoundException {
+        if(customer != null && customer.getId() != null){
+            Customer customerToUpdate = getCustomerByCustomerId(customer.getId());
+            
+            if(customerToUpdate.getUsername().equals(customerToUpdate.getUsername())){
+                customerToUpdate.setEmail(customer.getEmail());
+                customerToUpdate.setFirstName(customer.getFirstName());
+                customerToUpdate.setLastName(customer.getLastName());
+                customerToUpdate.setMobileNum(customer.getMobileNum());
+
+            } else {
+                throw new UpdateCustomerException("Username of customer record to be updated does not match the existing record");
+            }
+        } else {
+            throw new CustomerNotFoundException("Customer ID not provided for customer to be updated");
+        }
+    }
+    
+    @Override
+    public void deleteCustomer(Long customerId) throws CustomerNotFoundException{
+        Customer customerToRemove = getCustomerByCustomerId(customerId);
+        
+        em.remove(customerToRemove);
+    }
+    
 }

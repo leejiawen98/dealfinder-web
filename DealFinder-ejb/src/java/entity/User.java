@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -32,32 +33,33 @@ public abstract class User implements Serializable {
     protected Long id;
     @Column(nullable = false, unique = true, length = 32)
     private String username;
-    @Column(nullable = false, length = 32)
+//    @Column(nullable = false, length = 32)
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String password;
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    private String salt;
     @Column(nullable = false, length = 64)
     private String email;
     @Column(nullable = false, length = 8)
     private String mobileNum;
-    @Column(nullable = false, length = 64)
-    private String address;
-    
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<SaleTransaction> saleTransactions;
-    
-    
+
     public User() {
         this.saleTransactions = new ArrayList<>();
+        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
     }
 
-    public User(String username, String password, String email, String mobileNum, String address) {
+    public User(String username, String password, String email, String mobileNum) {
         this();
         this.username = username;
-        this.password = password;
         this.email = email;
         this.mobileNum = mobileNum;
-        this.address = address;
-    } 
-    
+
+        setPassword(password);
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -82,8 +84,7 @@ public abstract class User implements Serializable {
     public String toString() {
         return "entity.User[ id=" + id + " ]";
     }
-    
-    
+
     public Long getId() {
         return id;
     }
@@ -105,7 +106,19 @@ public abstract class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (password != null) {
+            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        } else {
+            this.password = null;
+        }
+    }
+    
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getEmail() {
@@ -124,14 +137,6 @@ public abstract class User implements Serializable {
         this.mobileNum = mobileNum;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public List<SaleTransaction> getSaleTransactions() {
         return saleTransactions;
     }
@@ -140,5 +145,4 @@ public abstract class User implements Serializable {
         this.saleTransactions = saleTransactions;
     }
 
-    
 }

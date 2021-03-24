@@ -47,8 +47,8 @@ public class Customer extends User implements Serializable {
         deals = new ArrayList<>();
     }
 
-    public Customer(String firstName, String lastName, BigDecimal eWalletAmount, String username, String password, String email, String mobileNum, String address) {
-        super(username, password, email, mobileNum, address);
+    public Customer(String firstName, String lastName, BigDecimal eWalletAmount, String username, String password, String email, String mobileNum) {
+        super(username, password, email, mobileNum);
         this.firstName = firstName;
         this.lastName = lastName;
         this.eWalletAmount = eWalletAmount;

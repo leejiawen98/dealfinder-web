@@ -33,14 +33,18 @@ public class Business extends User implements Serializable {
     
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<Deal> deals;
+    
+    @Column(nullable = false, length = 64)
+    private String address;
 
     public Business() {
         deals = new ArrayList<>();
     }
 
     public Business(String name, String username, String password, String email, String mobileNum, String address) {
-        super(username, password, email, mobileNum, address);
+        super(username, password, email, mobileNum);
         this.name = name;
+        this.address = address;
     }
     
 
@@ -93,6 +97,12 @@ public class Business extends User implements Serializable {
         this.deals = deals;
     }
     
-    
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
     
 }

@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import util.security.CryptographicHelper;
 
 /**
  *
@@ -25,21 +26,27 @@ public class Admin implements Serializable {
     private Long adminId;
     @Column(nullable = false, unique = true, length = 32)
     private String username;
-    @Column(nullable = false, length = 32)
+//    @Column(nullable = false, length = 32)
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String password;
+    @Column(columnDefinition = "CHAR(32) NOT NULL")
+    private String salt;
     @Column(nullable = false, length = 32)
     private String firstName;
     @Column(nullable = false, length = 32)
     private String lastName;
 
     public Admin() {
+        this.salt = CryptographicHelper.getInstance().generateRandomString(32);
     }
 
     public Admin(String username, String password, String firstName, String lastName) {
+        this();
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        
+        setPassword(password);
     }  
     
     @Override
@@ -88,7 +95,19 @@ public class Admin implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (password != null) {
+            this.password = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + this.salt));
+        } else {
+            this.password = null;
+        }
+    }
+    
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getFirstName() {

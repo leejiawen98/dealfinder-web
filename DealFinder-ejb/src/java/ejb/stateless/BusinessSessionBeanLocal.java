@@ -5,7 +5,14 @@
  */
 package ejb.stateless;
 
+import entity.Business;
+import java.util.List;
 import javax.ejb.Local;
+import util.exception.BusinessNotFoundException;
+import util.exception.BusinessUsernameExistException;
+import util.exception.InvalidLoginCredentialException;
+import util.exception.UnknownPersistenceException;
+import util.exception.UpdateBusinessException;
 
 /**
  *
@@ -13,5 +20,19 @@ import javax.ejb.Local;
  */
 @Local
 public interface BusinessSessionBeanLocal {
+
+    public Long createBusiness(Business business) throws BusinessUsernameExistException, UnknownPersistenceException;
+
+    public List<Business> getAllBusinesses();
+
+    public Business getBusinessByBusinessId(Long businessId) throws BusinessNotFoundException;
+
+    public Business businessLogin(String username, String password) throws InvalidLoginCredentialException;
+
+    public Business getBusinessByUsername(String username) throws BusinessNotFoundException;
+
+    public void updateBusiness(Business business) throws BusinessNotFoundException, UpdateBusinessException;
+
+    public void deleteBusiness(Long businessId) throws BusinessNotFoundException;
     
 }
