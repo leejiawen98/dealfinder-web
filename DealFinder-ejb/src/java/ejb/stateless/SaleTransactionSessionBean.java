@@ -147,7 +147,7 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
             
             em.remove(saleTransactionToRemove);
         } catch (SaleTransactionNotFoundException ex) {
-            throw new DeleteSaleTransactionException("An error occured while deleting Sale Transaction " + saleTransactionEntity.getSaleTransactionId());
+            throw new DeleteSaleTransactionException("An error occured while deleting Sale Transaction: " + ex.getMessage());
         }
     }
     
