@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Local;
 import util.exception.BusinessNotFoundException;
 import util.exception.BusinessUsernameExistException;
+import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UnknownPersistenceException;
 import util.exception.UpdateBusinessException;
@@ -21,7 +22,7 @@ import util.exception.UpdateBusinessException;
 @Local
 public interface BusinessSessionBeanLocal {
 
-    public Long createBusiness(Business business) throws BusinessUsernameExistException, UnknownPersistenceException;
+    public Long createBusiness(Business business) throws BusinessUsernameExistException, UnknownPersistenceException, InputDataValidationException;
 
     public List<Business> getAllBusinesses();
 
@@ -31,7 +32,7 @@ public interface BusinessSessionBeanLocal {
 
     public Business getBusinessByUsername(String username) throws BusinessNotFoundException;
 
-    public void updateBusiness(Business business) throws BusinessNotFoundException, UpdateBusinessException;
+    public void updateBusiness(Business business) throws BusinessNotFoundException, UpdateBusinessException, InputDataValidationException;
 
     public void deleteBusiness(Long businessId) throws BusinessNotFoundException;
     

@@ -15,6 +15,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -27,14 +30,22 @@ public class CreditCard implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ccId;
-    @Column(nullable = false, unique = true, length = 12)
+    @Column(nullable = false, unique = true, length = 16)
+    @NotNull
+    @Size(max = 16)
     private String ccNum;
     @Column(nullable = false, length = 3)
+    @NotNull
+    @Size(max = 3)
     private String cvv;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(max = 32)
     private String ccName;
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(nullable = false)
+    @NotNull
+    @Future
     private Date expDate;
     
     @OneToOne(optional = true, fetch = FetchType.LAZY)

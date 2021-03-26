@@ -25,12 +25,11 @@ public interface SaleTransactionSessionBeanLocal {
     
     public List<SaleTransaction> retrieveAllSaleTransactions();
     
-    public Deal retrieveSaleTransactionDealByDealId(Long dealId) throws DealNotFoundException;
-    
     public SaleTransaction retrieveSaleTransactionBySaleTransactionId(Long saleTransactionId) throws SaleTransactionNotFoundException;
     
     public void updateSaleTransaction(SaleTransaction saleTransactionEntity);
     
     public void deleteSaleTransaction(SaleTransaction saleTransactionEntity) throws DeleteSaleTransactionException;
     
+    public List<SaleTransaction> retrieveSaleTransactionDealByDealId(Long dealId) throws DealNotFoundException;
 }

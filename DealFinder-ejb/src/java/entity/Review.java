@@ -14,6 +14,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -27,8 +29,11 @@ public class Review implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
     @Column(nullable = false)
+    @NotNull
     private Integer dealRating;
     @Column(nullable = false, length = 128)
+    @NotNull
+    @Size(max = 128)
     private String description;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

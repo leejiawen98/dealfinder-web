@@ -89,7 +89,7 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
     }
     
     @Override
-    public Deal retrieveSaleTransactionDealByDealId(Long dealId) throws DealNotFoundException
+    public List<SaleTransaction> retrieveSaleTransactionDealByDealId(Long dealId) throws DealNotFoundException
     {
 //        Query query = em.createNamedQuery("selectAllSaleTransactionLineItemsByProductId");
 //        query.setParameter("inProductId", productId);
@@ -99,7 +99,7 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
         query.setParameter("inDealId", dealId);
 
         try {
-            return (Deal) query.getSingleResult();
+            return query.getResultList();
 
         } catch (NoResultException | NonUniqueResultException ex) {
             throw new DealNotFoundException("Deal Id " + dealId + " does not exist!");

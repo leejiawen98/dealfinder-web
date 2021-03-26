@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -25,9 +27,13 @@ public class BankAccount implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long accId;
-    @Column(nullable = false, length = 32)
+    @Column(nullable = false, unique = true, length = 32)
+    @NotNull
+    @Size(min = 8, max = 12)
     private String accNum;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(max = 32)
     private String bank;
 
     @OneToOne(optional = true, fetch = FetchType.LAZY)

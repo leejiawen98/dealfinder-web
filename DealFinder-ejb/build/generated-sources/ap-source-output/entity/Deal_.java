@@ -6,16 +6,18 @@ import entity.Customer;
 import entity.Review;
 import entity.SaleTransaction;
 import entity.Tag;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-03-25T22:06:11")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2021-03-26T18:53:51")
 @StaticMetamodel(Deal.class)
 public class Deal_ { 
 
+    public static volatile SingularAttribute<Deal, BigDecimal> unitPrice;
     public static volatile SingularAttribute<Deal, String> serialNum;
     public static volatile SingularAttribute<Deal, Business> business;
     public static volatile SingularAttribute<Deal, Long> dealId;

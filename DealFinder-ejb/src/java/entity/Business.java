@@ -16,6 +16,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -26,6 +28,8 @@ public class Business extends User implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(max = 32)
     private String name;
     
     @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)

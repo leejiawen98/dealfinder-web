@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import util.security.CryptographicHelper;
 
 /**
@@ -25,15 +27,21 @@ public class Admin implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adminId;
     @Column(nullable = false, unique = true, length = 32)
+    @NotNull
+    @Size(min = 4, max = 32)
     private String username;
-//    @Column(nullable = false, length = 32)
     @Column(columnDefinition = "CHAR(32) NOT NULL")
+    @NotNull
     private String password;
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(max = 32)
     private String firstName;
     @Column(nullable = false, length = 32)
+    @NotNull
+    @Size(max = 32)
     private String lastName;
 
     public Admin() {

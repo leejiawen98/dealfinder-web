@@ -17,6 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -35,8 +38,11 @@ public class SaleTransaction implements Serializable {
     private BigDecimal totalAmount;
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(nullable = false)
+    @NotNull
+    @Future
     private Date transactionDateTime;
     @Column(nullable = false)
+    @Min(1)
     private Integer quantity;
     
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
