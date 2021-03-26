@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ejb.stateless;
+package ejb.session.stateless;
 
 import entity.Tag;
 import java.util.List;
