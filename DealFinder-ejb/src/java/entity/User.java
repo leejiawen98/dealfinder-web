@@ -17,6 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import util.security.CryptographicHelper;
 
 /**
@@ -32,15 +35,22 @@ public abstract class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
     @Column(nullable = false, unique = true, length = 32)
+    @NotNull
+    @Size(min = 4, max = 32)
     private String username;
-//    @Column(nullable = false, length = 32)
     @Column(columnDefinition = "CHAR(32) NOT NULL")
+    @NotNull
     private String password;
     @Column(columnDefinition = "CHAR(32) NOT NULL")
     private String salt;
     @Column(nullable = false, length = 64)
+    @NotNull
+    @Size(max = 64)
     private String email;
     @Column(nullable = false, length = 8)
+    @NotNull
+    @Size(max = 8)
+    @Pattern(regexp = "^[89]\\d{7}$")
     private String mobileNum;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
