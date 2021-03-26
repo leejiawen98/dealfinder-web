@@ -56,7 +56,9 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
 
         return (Admin) query.getSingleResult();
     }
-
+    
+    
+    //adminLogin
     @Override
     public Admin adminLogin(String username, String password) throws InvalidLoginCredentialException {
         Admin admin = getAdminByUsername(username);
@@ -68,6 +70,7 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
         }
     }
+    
     
   
 
