@@ -13,7 +13,7 @@
 # Package Files #
 *.jar
 *.war
-*.narFRSApplication
+*.narDealFinder
 *.ear
 *.zip
 *.tar.gz
