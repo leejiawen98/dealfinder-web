@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/loginTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <p:button value="Back to Login" outcome="/index" style="margin-left: 10px"/>
+        <div style="text-align:center">
+            <h2 style="padding-top:10px">Register</h2>
+            <h:form id="registerForm">
+                
+                <p:messages id="message" for="registersucccess" showDetail="true" severity="info" closable="true"/>
+                
+                <p:panelGrid columns="2" style="margin:0 auto">
+                    
+                    <p:outputLabel for="name" value="Organisation Name" />
+                    <p:inputText id="name" value="#{registerManagedBean.name}" size="16" required="true" requiredMessage="Name is required" maxlength="32">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+
+                    <p:outputLabel for="email" value="Business Email" />
+                    <p:inputText id="email" value="#{registerManagedBean.email}" size="16" required="true" requiredMessage="Email is required" maxlength="32">
+                        <f:validateLength minimum="2" />
+                    </p:inputText>
+
+                    <p:outputLabel for="mobileNum" value="Mobile Number" />
+                    <p:inputText id="mobileNum" value="#{registerManagedBean.mobileNum}" size="16" required="true" requiredMessage="Mobile Number is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:inputText>
+                    
+                    <p:outputLabel for="address" value="Address" />
+                    <p:inputText id="address" value="#{registerManagedBean.address}" size="16" required="true" requiredMessage="Address is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:inputText>
+                    
+                    <p:outputLabel for="username" value="Username" />
+                    <p:inputText id="username" value="#{registerManagedBean.username}" size="16" required="true" requiredMessage="Username is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:inputText>
+
+                    <p:outputLabel for="password" value="Password" />
+                    <p:password id="password" value="#{registerManagedBean.password}" size="16" required="true" requiredMessage="Password is required" maxlength="32">
+                        <f:validateLength minimum="4" />
+                    </p:password>
+
+                    <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />
+                    <p:commandButton type="submit" value="Register" icon="pi pi-sign-in">
+                        <f:ajax event="click" execute="@form" render="@form" listener="#{registerManagedBean.register}" />
+                    </p:commandButton>
+
+                </p:panelGrid>
+               <p:growl life="2000" severity="warn,error">
+                   <p:autoUpdate />
+               </p:growl>
+            </h:form>      
+        </div>
+    </ui:define>
+
+</ui:composition>
