@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div style="margin:30px">
+            <h3>View all Business Listings</h3>
+            <h:form id="dealForm">
+                <p:dataTable id="acc" value="#{viewAllBusinessListingsManagedBean.deals}" var="deal" selectionMode="single" selection="#{viewAllBusinessListingsManagedBean.selectedDeal}" rowKey="#{deal.dealId}" widgetVar="dtDeal">
+<!--                    <p:ajax event="rowSelect" oncomplete="PF('dealDialog').show()" update=":dealForm:dealDialog" />-->
+                    
+                    <p:column style="width:2rem">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column headerText="Deal ID" sortBy="#{deal.dealId}">
+                        <h:outputText value="#{deal.dealId}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Serial No" sortBy="#{deal.serialNum}"> 
+                        <h:outputText value="#{deal.serialNum}"/>
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{deal.dealName}" filterBy="#{deal.dealName}">
+                        <h:outputText value="#{deal.dealName}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Unit Price" sortBy="#{deal.unitPrice}">
+                        <h:outputText value="#{deal.unitPrice}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Category" sortBy="#{deal.category.name}" filterBy="#{deal.category.name}">
+                        <h:outputText value="#{deal.category.name}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Business" sortBy="#{deal.business.name}" filterBy="#{deal.business.name}">
+                        <h:outputText value="#{deal.business.name}"/>
+                    </p:column>
+
+                    <p:rowExpansion>
+                        <div class="product">
+                            <div class="product-list-item">
+                                <p:graphicImage name="demo/images/product/#{product.image}"/>
+                                <div class="product-list-detail">
+                                    <div class="product-name">#{deal.dealName}</div>
+                                    <div class="product-description">#{deal.description}</div>
+                                    <!--<p:rating readonly="true" value="#{product.rating}"/>-->
+                                    <div class="product-description">#{deal.tags}</div>
+                                    <i class="pi pi-tag product-category-icon"/><span
+                                        class="product-category">#{deal.category.name}</span>
+                                </div>
+                                <div class="product-list-action">
+                                    <h:outputText value="#{deal.unitPrice}" styleClass="product-price">
+                                        <f:convertNumber currencySymbol="$" type="currency"/>
+                                    </h:outputText>
+                                    <h:outputText value="#{deal.quantityLeft}" styleClass="product-price"/>
+                                    <h:outputText value="#{deal.startDateTime}" styleClass="product-price"/>
+                                    <h:outputText value="#{deal.endDateTime}" styleClass="product-price"/>
+                                    <span class="product-badge status-#{product.inventoryStatus.name().toLowerCase()}">#{deal.quantityLeft > 0 ? 'IN STOCK' : 'OUT OF STOCK'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </p:rowExpansion>
+                    
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

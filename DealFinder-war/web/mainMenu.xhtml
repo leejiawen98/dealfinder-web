@@ -14,8 +14,8 @@
                 </p:submenu>
                 
                 <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Administrator'}">
-                    <p:menuitem value="Verify Businesses" />
-                    <p:menuitem value="View all Listings" />
+                    <p:menuitem value="Manage Businesses" outcome="/adminstrator/verifyAccounts"/>
+                    <p:menuitem value="View all Listings" outcome="/adminstrator/viewBusinessListings"/>
                 </p:submenu>
             </p:menu>
         </h:form>
