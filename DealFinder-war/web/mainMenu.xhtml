@@ -8,12 +8,12 @@
         <h:form>
             <p:menu style="width:200px">
                 <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Business'}">
-                    <p:menuitem value="Create Listings" />
-                    <p:menuitem value="View all Listings" />
-                    <p:menuitem value="View Sales (TBC)" />                    
+                    <p:menuitem value="Create Listings" outcome="/businessManagement/createDealListings.xhtml" icon="pi pi-plus"/>
+                    <p:menuitem value="View all Listings" outcome="/businessManagement/viewAllDealListings.xhtml" icon="pi pi-list" />
+                    <p:menuitem value="View Sales (TBC)" icon="pi pi-dollar" />                    
                 </p:submenu>
                 
-                <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Administrator'}">
+                <p:submenu label="Main Menu" icon="pi pi-list" rendered="#{sessionScope.accountType == 'Administrator'}">
                     <p:menuitem value="Verify Businesses" />
                     <p:menuitem value="View all Listings" />
                 </p:submenu>
