@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ez="http://xmlns.jcp.org/jsf/composite/ezcomp">
+
+    <ui:define name="content">
+
+        <ez:Breadcrumb pageName="createDealListings" />
+
+        <h:form id="formCreateDealListing">
+
+            <p:messages id="messagesCreateNewListing" redisplay="false" />
+
+            <p:panelGrid style="width: 100%">
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="serialNum" value="Serial Number: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="serialNum" value="#{createDealListingsManagedBean.newDeal.serialNum}" required="true" requiredMessage="Serial Number is required" />
+                    </p:column>
+                    <p:column>
+                        <p:message for="serialNum" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="dealName" value="Deal Name: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="dealName" value="#{createDealListingsManagedBean.newDeal.dealName}" placeholder="Biz 1 Birthday Sale" required="true" requiredMessage="Deal Name is required" />
+                    </p:column>
+                    <p:column>
+                        <p:message for="dealName" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="dealDescription" value="Description: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:inputTextarea id="dealDescription" value="#{createDealListingsManagedBean.newDeal.description}" rows="6" cols="33" required="true" requiredMessage="Description is required"/>
+                    </p:column>
+                    <p:column>
+                        <p:message for="dealDescription" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="unitPrice" value="Unit Price: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="unitPrice" value="#{createDealListingsManagedBean.newDeal.unitPrice}" required="true" requiredMessage="Unit Price is required" />
+                    </p:column>
+                    <p:column>
+                        <p:message for="unitPrice" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="qty" value="Quantity:  " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:inputText id="qty" value="#{createDealListingsManagedBean.newDeal.quantityLeft}" required="true" requiredMessage="Quantity is required" />
+                    </p:column>
+                    <p:column>
+                        <p:message for="qty" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="startDateTime" value="Start Date and Time: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:datePicker id="startDateTime" value="#{createDealListingsManagedBean.newDeal.startDateTime}" required="true" requiredMessage="Start Date and Time is required" />
+                    </p:column>
+                    <p:column>
+                        <p:message for="startDateTime" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="endDateTime" value="End Date and Time: " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:datePicker id="endDateTime" value="#{createDealListingsManagedBean.newDeal.endDateTime}" required="true" requiredMessage="End Date and Time is required"/>
+                    </p:column>
+                    <p:column>
+                        <p:message for="endDateTime" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="category" value="Category " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="category" value="#{createDealListingsManagedBean.newCategoryId}">
+                            <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
+                            <f:selectItems value="#{createDealListingsManagedBean.categoryList}" var="cat" itemValue="#{cat.categoryId}" itemLabel="#{cat.name}" />
+                        </p:selectOneMenu>
+                    </p:column>
+                    <p:column>
+                        <p:message for="category" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column>
+                        <p:outputLabel for="tags" value="Tag(s) " style="font-weight: bold;" />
+                    </p:column>
+                    <p:column>
+                        <p:selectManyMenu id="tags" value="#{createDealListingsManagedBean.newTagIds}" showCheckbox="true">
+                            <f:selectItems value="#{createDealListingsManagedBean.tagList}" var="tg" itemValue="#{tg.tagId}" itemLabel="#{tg.name}" />
+                        </p:selectManyMenu>
+                    </p:column>
+                    <p:column>
+                        <p:message for="tags" />
+                    </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column colspan="3">
+                        <p:commandButton type="reset" value="Clear" />&nbsp;
+                        <p:commandButton value="Create New Deal" update="@form" action="#{createDealListingsManagedBean.createNewDealListing}"/>
+                    </p:column>
+                </p:row>
+                
+            </p:panelGrid>
+           
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
