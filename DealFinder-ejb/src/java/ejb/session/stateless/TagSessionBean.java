@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Tag;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Local;
@@ -88,7 +89,7 @@ public class TagSessionBean implements TagSessionBeanLocal {
     @Override
     public List<Tag> retrieveAllTags()
     {
-        Query query = em.createQuery("SELECT t FROM TagEntity t ORDER BY t.name ASC");
+        Query query = em.createQuery("SELECT t FROM Tag t ORDER BY t.name ASC");
         List<Tag> tagEntities = query.getResultList();
         
         for(Tag tagEntity:tagEntities)
@@ -127,7 +128,7 @@ public class TagSessionBean implements TagSessionBeanLocal {
             {
                 Tag tagEntityToUpdate = retrieveTagByTagId(tagEntity.getTagId());
                 
-                Query query = em.createQuery("SELECT t FROM TagEntity t WHERE t.name = :inName AND t.tagId <> :inTagId");
+                Query query = em.createQuery("SELECT t FROM Tag t WHERE t.name = :inName AND t.tagId <> :inTagId");
                 query.setParameter("inName", tagEntity.getName());
                 query.setParameter("inTagId", tagEntity.getTagId());
                 
@@ -173,5 +174,18 @@ public class TagSessionBean implements TagSessionBeanLocal {
         }
 
         return msg;
+    }
+    
+    @Override
+    public List<String> retrieveAllTagNames()
+    {
+        List<Tag> tags = retrieveAllTags();
+        List<String> tagNames = new ArrayList<>();
+        for(Tag t: tags)
+        {
+            tagNames.add(t.getName());
+        }
+        
+        return tagNames;
     }
 }

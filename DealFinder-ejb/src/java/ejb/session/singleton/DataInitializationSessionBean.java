@@ -97,10 +97,10 @@ public class DataInitializationSessionBean {
             Category c2 = categorySessionBean.createNewCategoryEntity(new Category("Luxury Brands", "Designers goods"), 1l);
             
             Category c3 = categorySessionBean.createNewCategoryEntity(new Category("Food", "Food vouchers and deals"), null);
-            Category c4 = categorySessionBean.createNewCategoryEntity(new Category("Korean", "Authentic Korean Restaurants"), 4l);
+            Category c4 = categorySessionBean.createNewCategoryEntity(new Category("Korean", "Authentic Korean Restaurants"), 3l);
             
             Category c5 = categorySessionBean.createNewCategoryEntity(new Category("Grocery", "Grocery deals"), null);
-            Category c6 = categorySessionBean.createNewCategoryEntity(new Category("Instant Noodles", "Instant noodle bundles"), 6l);
+            Category c6 = categorySessionBean.createNewCategoryEntity(new Category("Instant Noodles", "Instant noodle bundles"), 5l);
             
             Tag t1 = tagSessionBean.createNewTagEntity(new Tag("Popular"));
             Tag t2 = tagSessionBean.createNewTagEntity(new Tag("Limited"));
@@ -122,7 +122,7 @@ public class DataInitializationSessionBean {
             cal.add(Calendar.MONTH, +7);
             Date result3 = cal.getTime();
             
-            dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45)), c1.getCategoryId(), tags1, b1);
+            dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45)), c2.getCategoryId(), tags1, b1);
             dealSessionBean.createNewDeal(new Deal("K001", "Obba Jjajang Deal Set", "2 person set meal of your jjajangmyeon! Original @ $15 each", new Date(), result2, 50, BigDecimal.valueOf(20)), c4.getCategoryId(), tags1, b2);
             dealSessionBean.createNewDeal(new Deal("N001", "Koka Instant Noodle Packet (6's)", "Spicy Singaporean Fried Noodles", new Date(), result3, 300, BigDecimal.valueOf(3)), c6.getCategoryId(), tags2, b3);
            

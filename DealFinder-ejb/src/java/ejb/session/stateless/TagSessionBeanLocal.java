@@ -29,6 +29,8 @@ public interface TagSessionBeanLocal {
     public void updateTag(Tag tagEntity) throws InputDataValidationException, TagNotFoundException, UpdateTagException;
     
     public void deleteTag(Long tagId) throws TagNotFoundException, DeleteTagException;
+
+    public List<String> retrieveAllTagNames();
     
     
 }
