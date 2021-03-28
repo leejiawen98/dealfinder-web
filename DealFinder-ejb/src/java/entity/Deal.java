@@ -62,6 +62,8 @@ public class Deal implements Serializable {
     @Column(nullable = false, precision = 7, scale = 2)
     private BigDecimal unitPrice;
     
+    private boolean enabled;
+    
     @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
     private List<SaleTransaction> saleTransactions;
     
@@ -91,6 +93,7 @@ public class Deal implements Serializable {
         favCustomers = new ArrayList<>();
         customers = new ArrayList<>();
         reviews = new ArrayList<>();
+        enabled = true;
     }
 
     public Deal(String serialNum, String dealName, String description, Date startDateTime, Date endDateTime, Integer quantityLeft, BigDecimal unitPrice) {
@@ -279,6 +282,14 @@ public class Deal implements Serializable {
 
     public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
     
     

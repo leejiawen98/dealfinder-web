@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.AdminNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 import util.exception.UpdateCustomerException;
@@ -50,24 +51,37 @@ public class AdminSessionBean implements AdminSessionBeanLocal {
     }
 
     @Override
-    public Admin getAdminByUsername(String username) {
+    public Admin getAdminByUsername(String username) throws AdminNotFoundException{
         Query query = em.createQuery("SELECT a FROM Admin a WHERE a.username = :inUsername");
         query.setParameter("inUsername", username);
-
-        return (Admin) query.getSingleResult();
+        if (query.getResultList().isEmpty())
+        {
+            throw new AdminNotFoundException("Username does not exist or password don't match");
+        }
+        else
+        {
+            return (Admin) query.getSingleResult();
+        }
     }
     
     
     //adminLogin
     @Override
-    public Admin adminLogin(String username, String password) throws InvalidLoginCredentialException {
-        Admin admin = getAdminByUsername(username);
-        String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + admin.getSalt()));
+    public Admin adminLogin(String username, String password) throws InvalidLoginCredentialException, AdminNotFoundException {
+        try
+        {
+            Admin admin = getAdminByUsername(username);
+            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + admin.getSalt()));
 
-        if (admin.getPassword().equals(passwordHash)) {
-            return admin;
-        } else {
-            throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            if (admin.getPassword().equals(passwordHash)) {
+                return admin;
+            } else {
+                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+            }
+        }
+        catch (AdminNotFoundException ex)
+        {
+            throw new AdminNotFoundException(ex.getMessage());
         }
     }
     

@@ -9,7 +9,9 @@
     <ui:define name="content">
         <div style="text-align: center;">
             <h2 style="padding-top:100px">Login</h2>
-            <h:form id="loginForm" style="padding-top:50px">
+            <h:form id="loginForm">
+                
+                <p:messages id="message" for="message" showDetail="true" severity="info" closable="true"/>
                 <p:panelGrid columns="2" style="margin:0 auto">
 
                     <p:outputLabel for="account" value="Account Type: "/>
@@ -31,11 +33,13 @@
                     </p:password>
 
                     <p:commandButton type="reset" value="Clear" icon="pi pi-undo" />
-                    <p:commandButton type="submit" value="Login" actionListener="#{loginManagedBean.login}" icon="pi pi-sign-in" />
+                    <p:commandButton type="submit" value="Login" icon="pi pi-sign-in"> 
+                                     <f:ajax event="click" execute="@form" render="@form" listener="#{loginManagedBean.login}" />
+                     </p:commandButton>
 
                 </p:panelGrid>
         
-                <p:growl life="2000">
+                <p:growl life="2000" severity="warn,error">
                     <p:autoUpdate />
                 </p:growl>
             </h:form>
