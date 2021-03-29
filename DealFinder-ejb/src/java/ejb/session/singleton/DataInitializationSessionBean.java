@@ -49,6 +49,8 @@ import util.exception.UnknownPersistenceException;
 public class DataInitializationSessionBean {
 
     @EJB
+    private DealSessionBeanLocal dealSessionBean;
+    @EJB
     private TagSessionBeanLocal tagSessionBean;
     @EJB
     private CategorySessionBeanLocal categorySessionBean;
