@@ -48,20 +48,6 @@ import util.exception.UnknownPersistenceException;
 @Startup
 public class DataInitializationSessionBean {
 
-    //-------can remove 
-    @EJB
-    private TagSessionBeanLocal tagSessionBean;
-
-    @EJB
-    private CategorySessionBeanLocal categorySessionBean;
-
-    @EJB
-    private DealSessionBeanLocal dealSessionBean;
-    
-    @EJB
-    private BusinessSessionBeanLocal businessSessionBean;
-    // ------
-
     @EJB
     private TagSessionBeanLocal tagSessionBean;
     @EJB
