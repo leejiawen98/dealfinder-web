@@ -128,11 +128,11 @@ public class CategoryResource {
         }
     }
     
-    @Path("retrieveCategory/{categoryId}")
+    @Path("retrieveCategoryByCategoryId/{categoryId}")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveCustomerById(@PathParam("categoryId") long categoryId)
+    public Response retrieveCategoryByCategoryId(@PathParam("categoryId") long categoryId)
     {
         try
         {

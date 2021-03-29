@@ -44,11 +44,11 @@ public class BusinessResource {
     }
     
     
-    @Path("retrieveAllBusiness")
+    @Path("retrieveAllBusinesses")
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveAllBusiness() {
+    public Response retrieveAllBusinesses() {
         try {
             List<Business> business = businessSessionBeanLocal.getAllBusinesses();
 

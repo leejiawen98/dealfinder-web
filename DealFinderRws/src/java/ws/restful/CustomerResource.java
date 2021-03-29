@@ -120,7 +120,7 @@ public class CustomerResource {
     @GET
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response retrieveCustomerById(@PathParam("customerId") long customerId)
+    public Response retrieveCustomerByCustomerId(@PathParam("customerId") long customerId)
     {
         try
         {

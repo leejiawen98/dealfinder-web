@@ -26,6 +26,7 @@ import util.exception.DealNotFoundException;
  *
  * @author stellaang
  */
+@Path("Deal")
 public class DealResource {
     
     @Context
