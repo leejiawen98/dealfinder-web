@@ -109,16 +109,8 @@ public class SecurityFilter implements Filter
         else if(accountType.equals("Business"))
         {
             if(path.equals("/home.xhtml") ||
-                path.equals("/cashierOperation/voidRefund.xhtml") ||
-                path.equals("/cashierOperation/viewMySaleTransactions.xhtml") ||
-                path.equals("/systemAdministration/createNewStaff.xhtml") ||
-                path.equals("/systemAdministration/viewStaffDetails.xhtml") ||
-                path.equals("/systemAdministration/viewAllStaffs.xhtml") ||
-                path.equals("/systemAdministration/createNewProduct.xhtml") ||
-                path.equals("/systemAdministration/viewProductDetails.xhtml") ||
-                path.equals("/systemAdministration/updateProduct.xhtml") ||
-                path.equals("/systemAdministration/deleteProduct.xhtml") ||
-                path.equals("/systemAdministration/viewAllProducts.xhtml"))
+                path.equals("/businessManagement/createDealListings.xhtml") ||
+                path.equals("/businessManagement/viewAllDealListings.xhtml"))
             {
                 return true;
             }
