@@ -50,4 +50,6 @@ public interface DealSessionBeanLocal {
     public void deleteDeal(Long dealId) throws DeleteDealException, DealNotFoundException;
 
     public List<Deal> retrieveDealByBusinessId(Long businessId);
+    
+    public Deal updateDealStatus(Deal deal) throws DealNotFoundException;
 }

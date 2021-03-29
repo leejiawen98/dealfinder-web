@@ -16,6 +16,9 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
+import util.exception.AdminNotFoundException;
+import util.exception.BusinessNotFoundException;
+import util.exception.BusinessNotVerifiedException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -64,10 +67,15 @@ public class LoginManagedBean {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "OK", null));
             FacesContext.getCurrentInstance().getExternalContext().redirect(FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/home.xhtml");
         }
-        catch(InvalidLoginCredentialException ex)
+        catch(InvalidLoginCredentialException | AdminNotFoundException ex)
         {
             ((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid login credential: " + ex.getMessage(), null));
+        }
+        catch (BusinessNotVerifiedException ex)
+        {
+            ((HttpSession)FacesContext.getCurrentInstance().getExternalContext().getSession(true)).invalidate();
+            FacesContext.getCurrentInstance().addMessage("message", new FacesMessage(FacesMessage.SEVERITY_INFO, ex.getMessage(), "Please contact the administrator"));
         }
     }
     

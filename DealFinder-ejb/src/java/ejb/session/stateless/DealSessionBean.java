@@ -403,4 +403,18 @@ public class DealSessionBean implements DealSessionBeanLocal {
 
         return msg;
     }
+    
+    public Deal updateDealStatus(Deal deal) throws DealNotFoundException
+    {
+        try
+        {
+            Deal dealUpdate = retrieveDealByDealId(deal.getDealId());
+            dealUpdate.setEnabled(deal.isEnabled());
+            return dealUpdate;
+        }
+        catch (DealNotFoundException ex)
+        {
+            throw new DealNotFoundException(ex.getMessage());
+        }
+    }
 }

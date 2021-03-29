@@ -9,6 +9,7 @@ import entity.Business;
 import java.util.List;
 import javax.ejb.Local;
 import util.exception.BusinessNotFoundException;
+import util.exception.BusinessNotVerifiedException;
 import util.exception.BusinessUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
@@ -28,12 +29,14 @@ public interface BusinessSessionBeanLocal {
 
     public Business getBusinessByBusinessId(Long businessId) throws BusinessNotFoundException;
 
-    public Business businessLogin(String username, String password) throws InvalidLoginCredentialException;
+    public Business businessLogin(String username, String password) throws InvalidLoginCredentialException, BusinessNotVerifiedException;
 
     public Business getBusinessByUsername(String username) throws BusinessNotFoundException;
 
     public void updateBusiness(Business business) throws BusinessNotFoundException, UpdateBusinessException, InputDataValidationException;
 
     public void deleteBusiness(Long businessId) throws BusinessNotFoundException;
+
+    public List<Business> getAllNonVerifiedBusinesses();
     
 }

@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Admin;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.AdminNotFoundException;
 import util.exception.InvalidLoginCredentialException;
 
 /**
@@ -23,8 +24,8 @@ public interface AdminSessionBeanLocal {
 
     public Admin getAdminByAdminId(Long adminId);
 
-    public Admin getAdminByUsername(String username);
+    public Admin getAdminByUsername(String username) throws AdminNotFoundException;
 
-    public Admin adminLogin(String username, String password) throws InvalidLoginCredentialException;
+    public Admin adminLogin(String username, String password) throws InvalidLoginCredentialException, AdminNotFoundException;
     
 }

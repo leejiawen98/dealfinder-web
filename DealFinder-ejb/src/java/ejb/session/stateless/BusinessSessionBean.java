@@ -22,6 +22,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import util.exception.BusinessNotFoundException;
+import util.exception.BusinessNotVerifiedException;
 import util.exception.BusinessUsernameExistException;
 import util.exception.CustomerNotFoundException;
 import util.exception.CustomerUsernameExistException;
@@ -62,7 +63,7 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
-                        throw new BusinessUsernameExistException("Business username " + business.getId() + " exist");
+                        throw new BusinessUsernameExistException("Business username " + business.getName() + " exist");
                     } else {
                         throw new UnknownPersistenceException(ex.getMessage());
                     }
@@ -114,16 +115,24 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
     }
 
     @Override
-    public Business businessLogin(String username, String password) throws InvalidLoginCredentialException {
+    public Business businessLogin(String username, String password) throws InvalidLoginCredentialException, BusinessNotVerifiedException {
         try {
             Business business = getBusinessByUsername(username);
-            String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + business.getSalt()));
+            
+            if (!business.getVerified())
+            {
+                throw new BusinessNotVerifiedException("Business Account not verified");
+            }
+            else
+            {
+                String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + business.getSalt()));
 
-            if (business.getPassword().equals(passwordHash)) {
+                if (business.getPassword().equals(passwordHash)) {
 
-                return business;
-            } else {
-                throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+                    return business;
+                } else {
+                    throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
+                }
             }
         } catch (BusinessNotFoundException ex) {
             throw new InvalidLoginCredentialException("Username does not exist or invalid password!");
@@ -144,6 +153,7 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
                     businessToUpdate.setEmail(business.getEmail());
                     businessToUpdate.setMobileNum(business.getMobileNum());
                     businessToUpdate.setName(business.getName());
+                    businessToUpdate.setVerified(business.getVerified());
                 } else {
                     throw new UpdateBusinessException("Username of businesss record to be updated does not match the existing record");
                 }
@@ -176,5 +186,13 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
         }
 
         return msg;
+    }
+    
+    
+    @Override
+    public List<Business> getAllNonVerifiedBusinesses() {
+        Query query = em.createQuery("SELECT b FROM Business b WHERE b.verified = FALSE");
+
+        return query.getResultList();
     }
 }

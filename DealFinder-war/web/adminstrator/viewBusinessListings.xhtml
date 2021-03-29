@@ -1,0 +1,132 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div style="margin:30px">
+            <h3>View all Business Listings</h3>
+            <h:form id="dealForm">
+                <p:dataTable id="acc" value="#{viewAllBusinessListingsManagedBean.deals}" var="deal"                  
+                             rowKey="#{deal.dealId}" widgetVar="dtDeal">               
+                   
+                    <p:column style="width:2rem">
+                        <p:rowToggler/>
+                    </p:column>
+
+                    <p:column headerText="Deal ID" sortBy="#{deal.dealId}">
+                        <h:outputText value="#{deal.dealId}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Serial No" sortBy="#{deal.serialNum}" filterBy="#{deal.serialNum}"> 
+                        <h:outputText value="#{deal.serialNum}"/>
+                    </p:column>
+
+                    <p:column headerText="Name" sortBy="#{deal.dealName}" filterBy="#{deal.dealName}">
+                        <h:outputText value="#{deal.dealName}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Unit Price" sortBy="#{deal.unitPrice}">
+                        <h:outputText value="#{deal.unitPrice}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Category" sortBy="#{deal.category.name}" filterBy="#{deal.category.name}">
+                        <h:outputText value="#{deal.category.name}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Business" sortBy="#{deal.business.name}" filterBy="#{deal.business.name}">
+                        <h:outputText value="#{deal.business.name}" />
+                    </p:column>
+
+                    <p:rowExpansion>      
+                        
+                        
+                        <div>
+                            <div style="align-content: center">
+                                <div style="float:left">
+                                    <p:graphicImage style="margin:10px; width:150px" library="images" name="deal.jpg"/>
+                                    <div style="margin:10px; font-weight: bold">#{deal.dealName}</div>
+                                    <div style="margin:10px; border: 1px lightgray solid; border-radius: 5px; padding: 5px; color: dimgray">#{deal.description}</div>
+                                    <!--<p:rating readonly="true" value="#{product.rating}"/>-->
+                                    <div style="margin:10px">
+                                        <ui:repeat var="tag" value="#{deal.tags}" >
+                                            <i class="pi pi-tag" style="font-size:14px"/>
+                                            <h:outputLabel value=" #{tag.getName()} "/>
+                                        </ui:repeat>
+                                    </div>
+                                    <div style="margin:10px">
+                                        <i class="pi pi-th-large" style="font-size:14px"/>
+                                        #{deal.category.name}</div>
+                                </div>
+                                <div style="float:right; margin:10px; text-align: right;">
+                                    <div style="">
+                                        <p:commandButton icon="pi pi-exclamation-triangle" value="#{deal.enabled == true ? 'Disable' : 'Enable'}"
+                                                         style="#{deal.enabled != true ? 
+                                                                'color: green' : 'color: crimson;'}">
+                                            <p:ajax event="click" oncomplete="PF('dealDialog').show()" update=":dealForm:dealDialog"/>
+                                            <f:ajax event="click" listener="#{viewAllBusinessListingsManagedBean.setSelectedDeal(deal)}"  />
+                                        </p:commandButton>
+                                       
+                                    </div>
+                                    
+                                    
+                                    <div style="margin-top: 60px">
+                                        <div style=" margin-bottom:10px">
+                                            <h:outputText value="#{deal.unitPrice}" style="font-weight: bold;">
+                                                <f:convertNumber currencySymbol="$" type="currency"/>
+                                            </h:outputText>
+                                        </div>
+
+                                        <div style=" margin-bottom:10px">
+                                        <h:outputText value="#{deal.quantityLeft} remaining" style="margin-bottom:30px"/>
+                                        </div>
+
+                                        <div style=" margin-bottom:10px">
+                                        <h:outputLabel value = "#{deal.quantityLeft > 0 ? 'INSTOCK' : 'OUT OF STOCK'}"
+                                                       style="#{deal.quantityLeft > 0 ? 
+                                                                'border: 5px solid lightgreen; border-radius: 5px; background: lightgreen; color: darkolivegreen; margin-bottom:30px' 
+                                                                : 'border: 5px solid lightsalmon; border-radius: 5px; background: lightsalmon; color: crimson; margin-bottom:30px'}"/>
+                                        </div>
+
+                                        <div style=" margin-bottom:10px">
+                                            <h:outputLabel value="Start On: "/>
+                                            <h:outputText value="#{deal.startDateTime}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                            </h:outputText>
+                                        </div>
+
+                                        <div style=" margin-bottom:10px">
+                                            <h:outputLabel value="End On: "/>
+                                            <h:outputText value="#{deal.endDateTime}" >
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                            </h:outputText>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:rowExpansion>
+                    
+                </p:dataTable>
+                <p:dialog header="Confirm" widgetVar="dealDialog" showEffect="fade"
+                        hideEffect="fade" resizable="false" id="dealDialog" closable="true">
+                    <p:ajax event="close" oncomplete="PF('dtDeal').unselectAllRows()" update="dealDialog"/>
+                    <h:outputLabel value="Reason for action: "/> <br/>
+                    <h:inputTextarea value="#{viewAllBusinessListingsManagedBean.reason}"/>
+                    <br/>
+                    <p:commandButton value="Yes">
+                        <f:ajax event="click" execute="@form" render="@form" listener="#{viewAllBusinessListingsManagedBean.disable}"  />
+                    </p:commandButton>
+                    <p:commandButton value="No"/>
+                </p:dialog>
+                <p:growl life="2000">
+                    <p:autoUpdate />
+                </p:growl>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>
