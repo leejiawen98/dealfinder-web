@@ -8,10 +8,15 @@
 
     <ui:define name="content">
         <div style="margin:30px">
-            <h3>View all Business Listings</h3>
             <h:form id="dealForm">
                 <p:dataTable id="acc" value="#{viewAllBusinessListingsManagedBean.deals}" var="deal"                  
-                             rowKey="#{deal.dealId}" widgetVar="dtDeal">               
+                             rowKey="#{deal.dealId}" widgetVar="dtDeal" paginator="true">    
+                    
+                    <f:facet name="header">
+                        <div style="text-align: left">
+                            View all Business Listings
+                        </div>
+                    </f:facet>
                    
                     <p:column style="width:2rem">
                         <p:rowToggler/>
@@ -40,10 +45,17 @@
                     <p:column headerText="Business" sortBy="#{deal.business.name}" filterBy="#{deal.business.name}">
                         <h:outputText value="#{deal.business.name}" />
                     </p:column>
+                    
+                    <p:column headerText="Status" sortBy="#{deal.enabled}">
+                        <p:commandButton icon="pi pi-exclamation-triangle" value="#{deal.enabled == true ? 'Disable' : 'Enable'}"
+                                            style="#{deal.enabled != true ? 
+                                            'color: green' : 'color: crimson;'}">
+                            <p:ajax event="click" oncomplete="PF('dealDialog').show()" update=":dealForm:dealDialog"/>
+                            <f:ajax event="click" listener="#{viewAllBusinessListingsManagedBean.setSelectedDeal(deal)}"  />
+                        </p:commandButton>
+                    </p:column>
 
                     <p:rowExpansion>      
-                        
-                        
                         <div>
                             <div style="align-content: center">
                                 <div style="float:left">
@@ -59,21 +71,16 @@
                                     </div>
                                     <div style="margin:10px">
                                         <i class="pi pi-th-large" style="font-size:14px"/>
-                                        #{deal.category.name}</div>
+                                        #{deal.category.name}
+                                    </div>
                                 </div>
-                                <div style="float:right; margin:10px; text-align: right;">
-                                    <div style="">
-                                        <p:commandButton icon="pi pi-exclamation-triangle" value="#{deal.enabled == true ? 'Disable' : 'Enable'}"
-                                                         style="#{deal.enabled != true ? 
-                                                                'color: green' : 'color: crimson;'}">
-                                            <p:ajax event="click" oncomplete="PF('dealDialog').show()" update=":dealForm:dealDialog"/>
-                                            <f:ajax event="click" listener="#{viewAllBusinessListingsManagedBean.setSelectedDeal(deal)}"  />
-                                        </p:commandButton>
-                                       
+                                
+                                <div style="float:right; margin:10px; text-align: right;"> 
+                                    <div>
+                                        <p:graphicImage style="width:100px; border: 1px solid lightgray;" library="images" name="JD.png"/>
                                     </div>
                                     
-                                    
-                                    <div style="margin-top: 60px">
+                                    <div style="margin-top: 10px">
                                         <div style=" margin-bottom:10px">
                                             <h:outputText value="#{deal.unitPrice}" style="font-weight: bold;">
                                                 <f:convertNumber currencySymbol="$" type="currency"/>
@@ -94,14 +101,14 @@
                                         <div style=" margin-bottom:10px">
                                             <h:outputLabel value="Start On: "/>
                                             <h:outputText value="#{deal.startDateTime}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT+8"/>
                                             </h:outputText>
                                         </div>
 
                                         <div style=" margin-bottom:10px">
                                             <h:outputLabel value="End On: "/>
                                             <h:outputText value="#{deal.endDateTime}" >
-                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" />
+                                                <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT+8"/>
                                             </h:outputText>
                                         </div>
                                     </div>

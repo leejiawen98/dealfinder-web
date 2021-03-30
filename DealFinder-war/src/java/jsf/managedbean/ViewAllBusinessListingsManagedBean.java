@@ -5,10 +5,12 @@
  */
 package jsf.managedbean;
 
+import com.google.zxing.WriterException;
 import ejb.session.stateless.DealSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import entity.Deal;
-import entity.Tag;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,7 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import util.exception.DealNotFoundException;
-import util.exception.DeleteDealException;
+import util.qrcode.QRCodeGenerator;
 
 /**
  *
@@ -78,6 +80,27 @@ public class ViewAllBusinessListingsManagedBean implements Serializable {
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please input a justification", null));
         }
+    }
+    
+    public void generateQRCode()
+    {
+        String qrCodeText = "https://www.journaldev.com";
+        String relativePath = "./resources/images/";
+        String absolutePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath(relativePath);
+        String filePath = absolutePath + "/JD.png";
+        int size = 125;
+        String fileType = "png";
+        File qrFile = new File(filePath);
+        QRCodeGenerator qrGen = new QRCodeGenerator(qrCodeText, filePath, size, fileType, qrFile);
+        try
+        {
+            qrGen.createQRImage();
+        }
+        catch (IOException | WriterException ex)
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
+        }
+        System.out.println("DONE");   
     }
 
     public List<Deal> getDeals() {

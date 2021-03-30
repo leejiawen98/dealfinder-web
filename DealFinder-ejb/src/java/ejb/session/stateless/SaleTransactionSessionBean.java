@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.Customer;
 import entity.Deal;
 import entity.SaleTransaction;
+import java.util.HashMap;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -18,6 +19,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.BusinessNotFoundException;
 import util.exception.CreateNewSaleTransactionException;
 import util.exception.CustomerNotFoundException;
 import util.exception.DealNotFoundException;
@@ -49,7 +51,7 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
     }
     
     @Override
-    public SaleTransaction createNewSaleTransaction(Long customerId, SaleTransaction newSaleTransactionEntity) throws CustomerNotFoundException, CreateNewSaleTransactionException
+    public SaleTransaction createNewSaleTransaction(Long customerId, SaleTransaction newSaleTransactionEntity, Long dealId) throws CustomerNotFoundException, CreateNewSaleTransactionException
     {
         if(newSaleTransactionEntity != null)
         {
@@ -58,6 +60,10 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
                 Customer customerEntity = customerSessionBeanLocal.getCustomerByCustomerId(customerId);
                 newSaleTransactionEntity.setUser(customerEntity);
                 customerEntity.getSaleTransactions().add(newSaleTransactionEntity);
+                
+                Deal deal = dealSessionBeanLocal.retrieveDealByDealId(dealId);
+                newSaleTransactionEntity.setDeal(deal);
+                deal.getSaleTransactions().add(newSaleTransactionEntity);
                 
                 dealSessionBeanLocal.debitQtyOnHand(newSaleTransactionEntity.getDeal().getDealId(), newSaleTransactionEntity.getQuantity());
                 
@@ -148,6 +154,51 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
             em.remove(saleTransactionToRemove);
         } catch (SaleTransactionNotFoundException ex) {
             throw new DeleteSaleTransactionException("An error occured while deleting Sale Transaction: " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessId(Long businessId) throws BusinessNotFoundException
+    {
+        Query query = em.createQuery("SELECT st FROM SaleTransaction st WHERE st.deal.business.id =:inBusinessId");
+        query.setParameter("inBusinessId", businessId);
+
+        try {
+            return query.getResultList();
+
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new BusinessNotFoundException("Business Id " + businessId + " does not exist!");
+        }
+    }
+    
+    @Override
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessAndMonth(Long businessId, String month) throws BusinessNotFoundException
+    {
+        HashMap<String,Integer> hm = new HashMap<String, Integer>();
+        hm.put("January", 1);
+        hm.put("Febraury", 2);
+        hm.put("March", 3);
+        hm.put("April", 4);
+        hm.put("May", 5);
+        hm.put("June", 6);
+        hm.put("July", 7);
+        hm.put("August", 8);
+        hm.put("September", 9);
+        hm.put("October", 10);
+        hm.put("November", 11);
+        hm.put("December", 12);
+        
+        int m = hm.get(month);
+        
+        Query query = em.createQuery("SELECT st FROM SaleTransaction st WHERE st.deal.business.id =:inBusinessId and EXTRACT(MONTH FROM st.transactionDateTime) =:inM");
+        query.setParameter("inBusinessId", businessId);
+        query.setParameter("inM", m);
+
+        try {
+            return query.getResultList();
+
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new BusinessNotFoundException("Business Id " + businessId + " does not exist!");
         }
     }
     

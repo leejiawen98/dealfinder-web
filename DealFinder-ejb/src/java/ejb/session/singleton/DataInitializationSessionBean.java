@@ -8,20 +8,22 @@ package ejb.session.singleton;
 import ejb.session.stateless.AdminSessionBeanLocal;
 import ejb.session.stateless.BusinessSessionBeanLocal;
 import ejb.session.stateless.CategorySessionBeanLocal;
+import ejb.session.stateless.CustomerSessionBeanLocal;
 import ejb.session.stateless.DealSessionBeanLocal;
+import ejb.session.stateless.SaleTransactionSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import entity.Admin;
 import entity.Business;
 import entity.Category;
+import entity.Customer;
 import entity.Deal;
+import entity.SaleTransaction;
 import entity.Tag;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
@@ -34,7 +36,11 @@ import util.exception.BusinessUsernameExistException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewCategoryException;
 import util.exception.CreateNewDealException;
+import util.exception.CreateNewSaleTransactionException;
 import util.exception.CreateNewTagException;
+import util.exception.CustomerNotFoundException;
+import util.exception.CustomerUsernameExistException;
+import util.exception.DealNotFoundException;
 import util.exception.DealSerialNumberExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
@@ -49,6 +55,10 @@ import util.exception.UnknownPersistenceException;
 public class DataInitializationSessionBean {
 
     @EJB
+    private CustomerSessionBeanLocal customerSessionBean;
+    @EJB
+    private SaleTransactionSessionBeanLocal saleTransactionSessionBean;
+    @EJB
     private DealSessionBeanLocal dealSessionBean;
     @EJB
     private TagSessionBeanLocal tagSessionBean;
@@ -58,6 +68,8 @@ public class DataInitializationSessionBean {
     private BusinessSessionBeanLocal businessSessionBean;
     @EJB
     private AdminSessionBeanLocal adminSessionBean;
+    
+    
 
     @PersistenceContext(unitName = "DealFinder-ejbPU")
     private EntityManager em;
@@ -70,11 +82,11 @@ public class DataInitializationSessionBean {
         List<Admin> admins = adminSessionBean.getAllAdmins();
         if (admins.isEmpty()) {
             initialiseAdmins();
-            initialiseBusiness();
-            initialiseCategoryTags();
-          //initialiseData();
+//            initialiseBusiness();
+//            initialiseCategoryTags();
+              initialiseData();
+              initialiseSales();
         }
-        
     }
 
     public void initialiseAdmins() {
@@ -164,12 +176,49 @@ public class DataInitializationSessionBean {
             cal.add(Calendar.MONTH, +7);
             Date result3 = cal.getTime();
             
-            dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45)), c2.getCategoryId(), tags1, b1);
-            dealSessionBean.createNewDeal(new Deal("K001", "Obba Jjajang Deal Set", "2 person set meal of your jjajangmyeon! Original @ $15 each", new Date(), result2, 50, BigDecimal.valueOf(20)), c4.getCategoryId(), tags1, b2);
-            dealSessionBean.createNewDeal(new Deal("N001", "Koka Instant Noodle Packet (6's)", "Spicy Singaporean Fried Noodles", new Date(), result3, 300, BigDecimal.valueOf(3)), c6.getCategoryId(), tags2, b3);
-           
+            cal = Calendar.getInstance();
+            cal.add(Calendar.DATE, +1);
+            Date result4 = cal.getTime();
+            
+            Deal d1 = dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45)), c2.getCategoryId(), tags1, b1);
+            Deal d2 = dealSessionBean.createNewDeal(new Deal("K001", "Obba Jjajang Deal Set", "2 person set meal of your jjajangmyeon! Original @ $15 each", new Date(), result2, 50, BigDecimal.valueOf(20)), c4.getCategoryId(), tags1, b2);
+            Deal d3 = dealSessionBean.createNewDeal(new Deal("N001", "Koka Instant Noodle Packet (6's)", "Spicy Singaporean Fried Noodles", new Date(), result3, 300, BigDecimal.valueOf(3)), c6.getCategoryId(), tags2, b3);
+            
+            Long cust1 = customerSessionBean.createCustomer(new Customer("Jia Wen", "Lee", BigDecimal.ZERO, "jiawen", "password", "leejiawen98@gmail.com", "97716383"));
+            Long cust2 = customerSessionBean.createCustomer(new Customer("Stella", "Ang", BigDecimal.ZERO, "stella", "password", "stella98@gmail.com", "83746343"));
+            Long cust3 = customerSessionBean.createCustomer(new Customer("Yeerou", "Hew", BigDecimal.ZERO, "yeerou", "password", "yeerou98@gmail.com", "85744394"));
+            Long cust4 = customerSessionBean.createCustomer(new Customer("Aaron", "Tan", BigDecimal.ZERO, "aaron", "password", "aaron98@gmail.com", "93847463"));
+            
         }
-        catch (BusinessUsernameExistException | UnknownPersistenceException | CreateNewCategoryException | InputDataValidationException | CreateNewTagException | BusinessNotFoundException | CategoryNotFoundException | CreateNewDealException | DealSerialNumberExistException ex)
+        catch (BusinessUsernameExistException | UnknownPersistenceException | CreateNewCategoryException | InputDataValidationException | 
+                CreateNewTagException | BusinessNotFoundException | CategoryNotFoundException | CreateNewDealException | DealSerialNumberExistException 
+                 | CustomerUsernameExistException ex)
+        {
+            
+        }
+    }
+    
+    public void initialiseSales()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, +1);
+        Date result4 = cal.getTime();
+        cal.add(Calendar.DATE, +3);
+        Date result6 = cal.getTime();
+        cal.add(Calendar.MONTH, +1);
+        Date result5 = cal.getTime();
+        
+        try
+        {
+            Deal d1 = dealSessionBean.retrieveDealByDealId(1l);
+            Deal d2 = dealSessionBean.retrieveDealByDealId(2l);
+        
+            saleTransactionSessionBean.createNewSaleTransaction(4l, new SaleTransaction(d1.getUnitPrice(), BigDecimal.valueOf(2).multiply(d1.getUnitPrice()), result4, 2), d1.getDealId());
+            saleTransactionSessionBean.createNewSaleTransaction(4l, new SaleTransaction(d1.getUnitPrice(), BigDecimal.valueOf(5).multiply(d1.getUnitPrice()), result6, 5), d1.getDealId());
+            saleTransactionSessionBean.createNewSaleTransaction(5l, new SaleTransaction(d2.getUnitPrice(), BigDecimal.valueOf(4).multiply(d1.getUnitPrice()),  result4, 4), d2.getDealId());
+        }
+        catch (CreateNewSaleTransactionException | CustomerNotFoundException | DealNotFoundException ex)
         {
             
         }

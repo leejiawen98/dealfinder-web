@@ -8,11 +8,16 @@
 
     <ui:define name="content">
         <div style="margin:30px">
-            <h3>Manage Business Accounts</h3>
             <h:form id="accountsForm">
-                <p:dataTable id="acc" value="#{verifyAccountsManagedBean.businessAcc}" var="acc" selectionMode="single" selection="#{verifyAccountsManagedBean.selectedBusiness}" rowKey="#{acc.id}" widgetVar="dtAcc">
+                <p:dataTable id="acc" value="#{verifyAccountsManagedBean.businessAcc}" var="acc" selectionMode="single" paginator="true" selection="#{verifyAccountsManagedBean.selectedBusiness}" rowKey="#{acc.id}" widgetVar="dtAcc">
                     <p:ajax event="rowSelect" oncomplete="PF('accountDialog').show()" update=":accountsForm:accountDialog" />
 
+                    <f:facet name="header">
+                        <div style="text-align: left">
+                            Manage Business Accounts
+                        </div>
+                    </f:facet>
+                    
                     <p:column headerText="Account ID" sortBy="#{acc.id}">
                         <h:outputText value="#{acc.id}"/>
                     </p:column>

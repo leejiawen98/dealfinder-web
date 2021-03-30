@@ -6,6 +6,7 @@
 package jsf.managedbean;
 
 import ejb.session.stateless.BusinessSessionBeanLocal;
+import ejb.session.stateless.EmailSessionBeanLocal;
 import entity.Business;
 import java.io.IOException;
 import java.io.Serializable;
@@ -20,6 +21,7 @@ import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import util.email.EmailManager;
 import util.exception.BusinessNotFoundException;
+import util.exception.EmailException;
 import util.exception.InputDataValidationException;
 import util.exception.UpdateBusinessException;
 
@@ -30,6 +32,9 @@ import util.exception.UpdateBusinessException;
 @Named(value = "verifyAccountsManagedBean")
 @ViewScoped
 public class VerifyAccountsManagedBean implements Serializable{
+
+    @EJB
+    private EmailSessionBeanLocal emailSessionBean;
 
     @EJB
     private BusinessSessionBeanLocal businessSessionBean;
@@ -72,19 +77,20 @@ public class VerifyAccountsManagedBean implements Serializable{
             selectedBusiness.setVerified(false);
             emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been rejected/disabled due to '" + rejectReason + "'. Please check with the administrator of DealFinder for further information";
         }
-        try
+            try
             {
                 if (emailBody != "")
                 {
-                    sendEmail(selectedBusiness.getEmail(), emailBody);
                     businessSessionBean.updateBusiness(selectedBusiness);
+                    emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
+                    rejectReason = "";
                 }
                 else
                 {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "No updates made", null));
                 }
             }
-            catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException ex)
+            catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException | EmailException ex)
             {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
             }
@@ -97,25 +103,20 @@ public class VerifyAccountsManagedBean implements Serializable{
             if (!selectedBusiness.getDeals().isEmpty())
             {
                 businessSessionBean.deleteBusiness(selectedBusiness.getId());
+                String emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been deleted. Please check with the administrator of DealFinder for further information";
+                emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Deleted", null));
             }
             else
             {
-                try 
-                {
-                    selectedBusiness.setVerified(false);
-                    businessSessionBean.updateBusiness(selectedBusiness);
-                    String emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been rejected/disabled due to '" + rejectReason + "'. Please check with the administrator of DealFinder for further information";
-                    sendEmail(selectedBusiness.getEmail(), emailBody);
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Unable to delete because it has existing deals, account is disabled", null));
-                }
-                catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException ex)
-                {
-                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
-                }
+                selectedBusiness.setVerified(false);
+                businessSessionBean.updateBusiness(selectedBusiness);
+                String emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been un-verified. Please check with the administrator of DealFinder for further information";
+                emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Unable to delete because it has existing deals, account is un-verified", null));    
             }
         }
-        catch (BusinessNotFoundException ex)
+        catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException | EmailException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
         }
@@ -124,7 +125,7 @@ public class VerifyAccountsManagedBean implements Serializable{
     public void sendEmail(String receipientEmail, String emailBody)
     {
         EmailManager emailManager = new EmailManager("leejiawen98@gmail.com", "Endeline1234.");
-        Boolean result = emailManager.email("leejiawen98@gmail.com", "leejiawen98@gmail.com", emailBody);
+        Boolean result = emailManager.email("leejiawen98@gmail.com", "e0417580@u.nus.edu", emailBody);
 //        Boolean result = true;
         if(result)
         {

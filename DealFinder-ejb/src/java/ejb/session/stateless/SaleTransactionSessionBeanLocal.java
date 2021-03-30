@@ -9,6 +9,7 @@ import entity.Deal;
 import entity.SaleTransaction;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.BusinessNotFoundException;
 import util.exception.CreateNewSaleTransactionException;
 import util.exception.CustomerNotFoundException;
 import util.exception.DealNotFoundException;
@@ -21,7 +22,7 @@ import util.exception.SaleTransactionNotFoundException;
  */
 @Local
 public interface SaleTransactionSessionBeanLocal {
-    public SaleTransaction createNewSaleTransaction(Long customerId, SaleTransaction newSaleTransactionEntity) throws CustomerNotFoundException, CreateNewSaleTransactionException; 
+    public SaleTransaction createNewSaleTransaction(Long customerId, SaleTransaction newSaleTransactionEntity, Long dealId) throws CustomerNotFoundException, CreateNewSaleTransactionException;
     
     public List<SaleTransaction> retrieveAllSaleTransactions();
     
@@ -32,4 +33,8 @@ public interface SaleTransactionSessionBeanLocal {
     public void deleteSaleTransaction(SaleTransaction saleTransactionEntity) throws DeleteSaleTransactionException;
     
     public List<SaleTransaction> retrieveSaleTransactionDealByDealId(Long dealId) throws DealNotFoundException;
+    
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessId(Long businessId) throws BusinessNotFoundException;
+    
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessAndMonth(Long businessId, String month) throws BusinessNotFoundException;
 }

@@ -5,7 +5,9 @@
  */
 package ejb.session.stateless;
 
+import entity.Business;
 import javax.ejb.Local;
+import util.exception.EmailException;
 
 /**
  *
@@ -13,5 +15,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface EmailSessionBeanLocal {
+
+    public Boolean emailBusinessVerification(Business business, String emailBody) throws EmailException;
     
 }
