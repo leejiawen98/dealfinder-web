@@ -8,20 +8,32 @@ package jsf.managedbean;
 import ejb.session.stateless.SaleTransactionSessionBeanLocal;
 import entity.Business;
 import entity.SaleTransaction;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
+import javax.sql.DataSource;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperRunManager;
 import util.enumeration.MonthEnum;
 import util.exception.BusinessNotFoundException;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -30,6 +42,9 @@ import util.exception.BusinessNotFoundException;
 @Named(value = "salesReportManagedBean")
 @ViewScoped
 public class SalesReportManagedBean implements Serializable{
+
+    @Resource(name = "dealFinder")
+    private DataSource dealFinder;
 
     @EJB
     private SaleTransactionSessionBeanLocal saleTransactionSessionBean;
@@ -41,6 +56,9 @@ public class SalesReportManagedBean implements Serializable{
     private String selectedMonth;
     
     private Business business;
+    
+    private BigDecimal totalAmt;
+   
 
     public SalesReportManagedBean() {
         
@@ -74,12 +92,56 @@ public class SalesReportManagedBean implements Serializable{
                     return abc2.getTransactionDateTime().compareTo(abc1.getTransactionDateTime());
                 }
             });
+            getTotalAmtInSelectedMonth();
         }
         catch (BusinessNotFoundException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
+    }
+    
+    public void getTotalAmtInSelectedMonth()
+    {
+        totalAmt = BigDecimal.ZERO;
+        for (SaleTransaction s: sales)
+        {
+            totalAmt = totalAmt.add(s.getTotalAmount());
+        }
+    }
+    
+    public void generateReport(ActionEvent event) {
+        if (sales.isEmpty())
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No sales for this month", null));
+        }
+            else
+            {
+            List<Long> st = new ArrayList<>();
+            for (SaleTransaction s: sales)
+            {
+                st.add(s.getSaleTransactionId());
+            }
+            try {
+                HashMap parameters = new HashMap();
+                parameters.put("stIds", st);
+                parameters.put("totalAmt", totalAmt.toString());
+                parameters.put("businessName", business.getName());
+                parameters.put("businessAddress", business.getAddress());
+                parameters.put("month", selectedMonth);
+                String relativePath = "./resources/images/";
+                parameters.put("CONTEXT",FacesContext.getCurrentInstance().getExternalContext().getRealPath(relativePath) + "/logo.jpeg");
 
+                InputStream reportStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreport/salesReportMonth.jasper");
+                OutputStream outputStream = FacesContext.getCurrentInstance().getExternalContext().getResponseOutputStream();
+
+                JasperRunManager.runReportToPdfStream(reportStream, outputStream, parameters, dealFinder.getConnection());
+            } catch (JRException ex) {
+                ex.printStackTrace();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            } catch (IOException ex) {
+            }
+        }
     }
     
     public List<SaleTransaction> getSales() {
@@ -112,6 +174,14 @@ public class SalesReportManagedBean implements Serializable{
 
     public void setBusiness(Business business) {
         this.business = business;
+    }
+
+    public BigDecimal getTotalAmt() {
+        return totalAmt;
+    }
+
+    public void setTotalAmt(BigDecimal totalAmt) {
+        this.totalAmt = totalAmt;
     }
 
 }

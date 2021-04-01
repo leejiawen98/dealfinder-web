@@ -20,18 +20,19 @@ import util.exception.EmailException;
 @Stateless
 public class EmailSessionBean implements EmailSessionBeanLocal {
 
-    private final String FROM_EMAIL_ADDRESS = "xxx <xxx@gmail.com>";
-    private final String GMAIL_USERNAME = "xxx@gmail.com";
-    private final String GMAIL_PASSWORD = "xxx";
+//    private final String FROM_EMAIL_ADDRESS = "xxx <xxx@gmail.com>";
+//    private final String GMAIL_USERNAME = "xxx@gmail.com";
+//    private final String GMAIL_PASSWORD = "xxx";
     
     @Override
-    public Boolean emailBusinessVerification(Business business, String emailBody) throws EmailException
+    @Asynchronous
+    public Future<Boolean> emailBusinessVerification(Business business, String emailBody) throws EmailException, InterruptedException
     {
         EmailManager emailManager = new EmailManager("leejiawen98@gmail.com", "Endeline1234.");
         try
         {
-            emailManager.email("leejiawen98@gmail.com", business.getEmail(), emailBody);
-            return true;
+            Boolean result = emailManager.email("leejiawen98@gmail.com", business.getEmail(), emailBody);
+            return new AsyncResult<>(result);
         }
         catch (Exception ex)
         {

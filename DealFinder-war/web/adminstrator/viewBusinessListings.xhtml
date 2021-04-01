@@ -35,7 +35,9 @@
                     </p:column>
                     
                     <p:column headerText="Unit Price" sortBy="#{deal.unitPrice}">
-                        <h:outputText value="#{deal.unitPrice}"/>
+                        <h:outputText value="#{deal.unitPrice}">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
                     </p:column>
                     
                     <p:column headerText="Category" sortBy="#{deal.category.name}" filterBy="#{deal.category.name}">

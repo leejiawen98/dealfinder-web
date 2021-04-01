@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Business;
+import java.util.concurrent.Future;
 import javax.ejb.Local;
 import util.exception.EmailException;
 
@@ -16,6 +17,6 @@ import util.exception.EmailException;
 @Local
 public interface EmailSessionBeanLocal {
 
-    public Boolean emailBusinessVerification(Business business, String emailBody) throws EmailException;
+    public Future<Boolean> emailBusinessVerification(Business business, String emailBody) throws EmailException, InterruptedException;
     
 }

@@ -176,7 +176,7 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
     {
         HashMap<String,Integer> hm = new HashMap<String, Integer>();
         hm.put("January", 1);
-        hm.put("Febraury", 2);
+        hm.put("February", 2);
         hm.put("March", 3);
         hm.put("April", 4);
         hm.put("May", 5);

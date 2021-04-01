@@ -111,7 +111,7 @@ public class SecurityFilter implements Filter
             if(path.equals("/home.xhtml") ||
                 path.equals("/businessManagement/createDealListings.xhtml") ||
                 path.equals("/businessManagement/viewAllDealListings.xhtml") ||
-                path.equals("/businessManagement/salesReport.xhtml")  
+                path.equals("/businessManagement/salesReport.xhtml")   
                 )
             {
                 return true;

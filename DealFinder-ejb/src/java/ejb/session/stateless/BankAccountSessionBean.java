@@ -98,16 +98,23 @@ public class BankAccountSessionBean implements BankAccountSessionBeanLocal {
     
     @Override
     public void deleteBankAccount(Long bankAccountId) throws BankAccountNotFoundException {
-        BankAccount bankAccountToRemove = retrieveBankAccountByBankAccountId(bankAccountId);
+        try
+        {
+            BankAccount bankAccountToRemove = retrieveBankAccountByBankAccountId(bankAccountId);
 
-        if (bankAccountToRemove.getBusiness() != null) {
-            Business business = bankAccountToRemove.getBusiness();
-            
-            business.setBankAccount(null);
-            bankAccountToRemove.setBank(null);
+            if (bankAccountToRemove.getBusiness() != null) {
+                Business business = bankAccountToRemove.getBusiness();
+
+                business.setBankAccount(null);
+                bankAccountToRemove.setBank(null);
+            }
+
+            em.remove(bankAccountToRemove);
         }
-
-        em.remove(bankAccountToRemove);
+        catch (BankAccountNotFoundException ex)
+        {
+            throw new BankAccountNotFoundException(ex.getMessage());
+        }
     }
     
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<BankAccount>> constraintViolations) {

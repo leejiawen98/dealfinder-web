@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.Future;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -24,6 +25,7 @@ import util.exception.BusinessNotFoundException;
 import util.exception.EmailException;
 import util.exception.InputDataValidationException;
 import util.exception.UpdateBusinessException;
+import util.thread.RunnableNotification;
 
 /**
  *
@@ -82,29 +84,31 @@ public class VerifyAccountsManagedBean implements Serializable{
                 if (emailBody != "")
                 {
                     businessSessionBean.updateBusiness(selectedBusiness);
-                    emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
-                    rejectReason = "";
+                    sendEmail(emailBody); 
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Update done and email sent to user", null));
                 }
                 else
                 {
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "No updates made", null));
                 }
             }
-            catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException | EmailException ex)
+            catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException ex)
             {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
             }
+            rejectReason = "";
     }
     
     public void delete()
     {
         try
         {
-            if (!selectedBusiness.getDeals().isEmpty())
+            if (selectedBusiness.getDeals().isEmpty())
             {
                 businessSessionBean.deleteBusiness(selectedBusiness.getId());
                 String emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been deleted. Please check with the administrator of DealFinder for further information";
-                emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
+                sendEmail(emailBody);                         
+                businessAcc.remove(selectedBusiness);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Account Deleted", null));
             }
             else
@@ -112,28 +116,28 @@ public class VerifyAccountsManagedBean implements Serializable{
                 selectedBusiness.setVerified(false);
                 businessSessionBean.updateBusiness(selectedBusiness);
                 String emailBody = "Your business account '" + selectedBusiness.getUsername() + "' has been un-verified. Please check with the administrator of DealFinder for further information";
-                emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Unable to delete because it has existing deals, account is un-verified", null));    
+                sendEmail(emailBody);  
             }
         }
-        catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException | EmailException ex)
+        catch (BusinessNotFoundException | InputDataValidationException | UpdateBusinessException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
         }
+        rejectReason = "";
     }
     
-    public void sendEmail(String receipientEmail, String emailBody)
+    public void sendEmail(String emailBody)
     {
-        EmailManager emailManager = new EmailManager("leejiawen98@gmail.com", "Endeline1234.");
-        Boolean result = emailManager.email("leejiawen98@gmail.com", "e0417580@u.nus.edu", emailBody);
-//        Boolean result = true;
-        if(result)
+        try
         {
-            FacesContext.getCurrentInstance().addMessage("message", new FacesMessage(FacesMessage.SEVERITY_INFO, "Email sent successfully", null));
+            Future<Boolean> asyncResult = emailSessionBean.emailBusinessVerification(selectedBusiness, emailBody);
+            RunnableNotification rn = new RunnableNotification(asyncResult);
+            rn.start(); 
         }
-        else
+        catch (EmailException | InterruptedException ex)
         {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while sending email", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error: " + ex.getMessage(), null));
         }
     }
     
