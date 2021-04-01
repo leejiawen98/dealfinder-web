@@ -22,14 +22,6 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${libs.Zxing_3.4.1.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${libs.QRGen_1.3.classpath}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
                     <file>${libs.JasperReports_6.16.0.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
