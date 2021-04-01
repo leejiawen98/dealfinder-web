@@ -22,16 +22,6 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
-                    <file>${file.reference.qrgen-1.0.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.zxing-core-1.7.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
-                </library>
-                <library dirs="200">
-                    <file>${file.reference.zxing-j2se-1.7.jar}</file>
-                    <file>${libs.Java_Mail_1.6.2.classpath}</file>
                     <file>${libs.JasperReports_6.16.0.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>

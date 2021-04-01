@@ -275,26 +275,6 @@ public class DealSessionBean implements DealSessionBeanLocal {
     }
 
     @Override
-    public List<Deal> retrieveDealByBusinessId(Long businessId){
-        Query query = em.createQuery("SELECT d FROM Deal d WHERE d.business.id = :inBusinessId");
-        query.setParameter("inBusinessId", businessId);
-        
-        List<Deal> deals = query.getResultList();
-        
-        for(Deal deal: deals){
-            deal.getCategory();
-            deal.getTags().size();
-            deal.getBusiness();
-            deal.getReviews().size();
-            deal.getCustomers().size();
-            deal.getFavCustomers().size();
-            deal.getSaleTransactions().size();
-        }
-        
-        return deals;
-    }
-    
-    @Override
     public void updateDeal(Deal deal, Long categoryId, List<Long> tagIds) throws DealNotFoundException, InputDataValidationException, UpdateDealException, TagNotFoundException, CategoryNotFoundException {
         if (deal != null && deal.getDealId() != null) {
             Set<ConstraintViolation<Deal>> constraintViolations = validator.validate(deal);
