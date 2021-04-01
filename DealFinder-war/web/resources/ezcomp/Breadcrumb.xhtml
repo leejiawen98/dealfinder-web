@@ -15,12 +15,12 @@
         <h:form id="formMain">
             <p:breadCrumb homeDisplay="false">
                 <p:menuitem icon="pi pi-home" url="#{application.contextPath}/home.xhtml" style="text-decoration-line: none;" />
-                
-                <p:menuitem value="Business Management" rendered="#{cc.attrs.pageName == 'createDealListings' ||
-                                                                        cc.attrs.pageName == 'viewDealListings' ||
-                                                                        cc.attrs.pageName == 'viewSaleTransactions'}" />
-                <p:menuitem value="Create Listing" url="#{application.contextPath}/businessManagement/createDealListings.xhtml" rendered="#{cc.attrs.pageName == 'createDealListings'}" />
 
+                <p:menuitem value="Business Management" rendered="#{cc.attrs.pageName == 'createDealListings' ||
+                                                                    cc.attrs.pageName == 'viewDealListings' ||
+                                                                    cc.attrs.pageName == 'viewSaleTransactions'}" />
+                <p:menuitem value="Create Listing" url="#{application.contextPath}/businessManagement/createDealListings.xhtml" rendered="#{cc.attrs.pageName == 'createDealListings'}" />
+                <p:menuitem value="View All Listings" url="#{application.contextPath}/businessManagement/viewAllDealListings.xhtml" rendered="#{cc.attrs.pageName == 'viewDealListings'}" />
             </p:breadCrumb>
         </h:form>
     </cc:implementation>
