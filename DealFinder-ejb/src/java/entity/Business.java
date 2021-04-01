@@ -40,6 +40,9 @@ public class Business extends User implements Serializable {
     
     @Column(nullable = false, length = 64)
     private String address;
+    
+    @Column(nullable = false, length = 1)
+    private boolean verified;
 
     public Business() {
         deals = new ArrayList<>();
@@ -49,6 +52,7 @@ public class Business extends User implements Serializable {
         super(username, password, email, mobileNum);
         this.name = name;
         this.address = address;
+        this.verified = false;
     }
     
 
@@ -107,6 +111,14 @@ public class Business extends User implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean getVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
     }
     
 }

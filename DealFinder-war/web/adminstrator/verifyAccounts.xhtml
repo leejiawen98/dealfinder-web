@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <div style="margin:30px">
+            <h3>Manage Business Accounts</h3>
+            <h:form id="accountsForm">
+                <p:dataTable id="acc" value="#{verifyAccountsManagedBean.businessAcc}" var="acc" selectionMode="single" selection="#{verifyAccountsManagedBean.selectedBusiness}" rowKey="#{acc.id}" widgetVar="dtAcc">
+                    <p:ajax event="rowSelect" oncomplete="PF('accountDialog').show()" update=":accountsForm:accountDialog" />
+
+                    <p:column headerText="Account ID" sortBy="#{acc.id}">
+                        <h:outputText value="#{acc.id}"/>
+                    </p:column>
+
+                    <p:column headerText="Business Name" sortBy="#{acc.name}" filterBy="#{acc.name}">
+                        <h:outputText value="#{acc.name}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Username" sortBy="#{acc.username}" filterBy="#{acc.username}">
+                        <h:outputText value="#{acc.username}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Status" sortBy="#{acc.verified}"> 
+                        <h:outputText value="#{acc.verified == true? 'Verified' : 'Not Verified'}"/>
+                    </p:column>
+                </p:dataTable>
+
+
+                <p:dialog header="Account Info" widgetVar="accountDialog" showEffect="fade"
+                          hideEffect="fade" resizable="false" id="accountDialog" closable="true">
+                    <p:ajax event="close" oncomplete="PF('dtAcc').unselectAllRows()" update="accountDialog"/>
+                    <p:outputPanel id="acccountDetail" style="text-align:center;">
+                        <p:column rendered="#{not empty verifyAccountsManagedBean.selectedBusiness}">
+                            <div class="product">
+                                <div class="product-grid-item border-0" style="margin-bottom: 0">
+                                    <div class="product-grid-item-top">
+                                        <div>
+                                            <i class="pi pi-user"/>
+                                            <span class="product-category">#{verifyAccountsManagedBean.selectedBusiness.name}</span>
+                                        </div>
+                                        <p:graphicImage style="margin:10px; width:150px" library="images" name="deal.jpg"/>
+                                    </div>
+                                    <div class="product-grid-item-content" style="padding:20px">
+                                        <p:panelGrid columns="2">
+                                            <h:outputLabel value="Email"/>
+                                            <div class="product-name">#{verifyAccountsManagedBean.selectedBusiness.email}</div>
+
+                                            <h:outputLabel value="Mobile Number"/>
+                                            <div class="product-description">#{verifyAccountsManagedBean.selectedBusiness.mobileNum}</div>
+
+                                            <h:outputLabel value="Address"/>
+                                            <div class="product-description">#{verifyAccountsManagedBean.selectedBusiness.address}</div>
+
+                                            <h:outputLabel value="Status"/>
+                                            <p:selectOneMenu id="status" value="#{verifyAccountsManagedBean.selectedStatus}" style="width:150px" required="true" requiredMessage="Select status" >
+                                                <p:ajax update="textbox,label" process="@this" />
+                                                <f:selectItem itemLabel="Select Status" itemValue="0" noSelectionOption="true" itemDisabled="true"/>
+                                                <f:selectItem itemValue= "1" itemLabel="Verified"/>
+                                                <f:selectItem itemValue= "2" itemLabel="Reject/Disable"/>
+                                            </p:selectOneMenu>
+                                            
+                                            <h:outputLabel id="label" value="#{verifyAccountsManagedBean.selectedStatus == 2? 'Reason' : ''}"/>
+                                            <p:inputTextarea id="textbox" placeholder="#{verifyAccountsManagedBean.selectedStatus == 2? 'Please state reason' : ''}" value="#{verifyAccountsManagedBean.rejectReason}" disabled="#{verifyAccountsManagedBean.selectedStatus != 2}" required="true" requiredMessage="Reason for disabling/rejecting is required">
+                                                <f:validateLength minimum="4" />
+                                            </p:inputTextarea>
+                                        </p:panelGrid>
+                                    </div>
+                                    <div class="product-grid-item-bottom">          
+                                   
+                                    <p:commandButton type="submit" value="Update" icon="pi pi-check" >
+                                        <f:ajax event="click" execute="@form" render="@form" listener="#{verifyAccountsManagedBean.verify}"  />
+                                    </p:commandButton>
+                                        
+                                        
+                                    <p:commandButton type="delete" value="Delete" icon="pi pi-check">
+                                        <p:confirm header="Confirmation" message="Confirm deletion?" icon="pi pi-info-circle"/>
+                                    </p:commandButton>
+                                        
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes">
+                                            <f:ajax event="click" execute="@form" render="@form" listener="#{verifyAccountsManagedBean.delete}"  />
+                                        </p:commandButton>
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
+                                    </p:confirmDialog>
+                                        
+                                    <p:growl life="2000">
+                                        <p:autoUpdate />
+                                    </p:growl>
+                                    </div>
+                                </div>
+                            </div>
+                        </p:column>
+                    </p:outputPanel>
+                </p:dialog>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

@@ -13,9 +13,9 @@
                     <p:menuitem value="View Sales (TBC)" icon="pi pi-dollar" />                    
                 </p:submenu>
                 
-                <p:submenu label="Main Menu" icon="pi pi-list" rendered="#{sessionScope.accountType == 'Administrator'}">
-                    <p:menuitem value="Verify Businesses" />
-                    <p:menuitem value="View all Listings" />
+                <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Administrator'}">
+                    <p:menuitem value="Manage Businesses" outcome="/adminstrator/verifyAccounts"/>
+                    <p:menuitem value="View all Listings" outcome="/adminstrator/viewBusinessListings"/>
                 </p:submenu>
             </p:menu>
         </h:form>

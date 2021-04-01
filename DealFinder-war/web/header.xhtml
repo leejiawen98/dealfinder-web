@@ -5,7 +5,15 @@
                 xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <header>
-        <h1>DealFinder</h1>
+        <div class="container" style="display: flex; align-items: center;justify-content: left; ">
+            <div class="image">
+                <h:graphicImage library="images" name="logo.png" style="width:100px; height: 100px; "/>
+            </div>
+            <div class="text">
+                <h2 style="">DealFinder</h2>
+            </div>
+        </div>
+
         <h:form>
             <p:menubar style="float:right;top:-30px;" rendered="#{sessionScope.isLogin == true}">
                 <p:submenu label="Account">

@@ -12,7 +12,7 @@
 
         <div>
             <h3>View All Deal Listings</h3>
-            
+
             <h:form id="formAllDeals">
                 <p:messages id="messagesAllDeals" redisplay="false" closable="true" />
 
@@ -65,20 +65,26 @@
                         <h:outputText value="#{deal.category.name}" />
                     </p:column>
 
-                    <p:column headerText="Action">
+                    <p:column headerText="Action" style="width:14%;">
                         <p:commandButton update="formViewDeal" oncomplete="PF('dialogViewDeal').show()" icon="ui-icon-document" title="View" actionListener="#{viewDealManagedBean.generateQR}">
                             <f:attribute name="dealToDisplayQR" value="#{deal}" />
                             <f:setPropertyActionListener value="#{deal}" target="#{viewAllDealListingsManagedBean.viewDealManagedBean.dealToView}"/>
                         </p:commandButton>
-                        <p:commandButton update="" oncomplete="" icon="" title="Update">
+                        <p:commandButton actionListener="#{viewAllDealListingsManagedBean.doUpdateDeal}" update="formUpdateDeal" oncomplete="PF('dialogUpdateDeal').show()" icon="ui-icon-pencil" title="Update">
                             <f:attribute name="dealToUpdate" value="#{deal}"/>
                         </p:commandButton>
-                        <p:commandButton update="" oncomplete="" icon="" title="Update">
+                        <p:commandButton actionListener="#{viewAllDealListingsManagedBean.doDisable}" update="formAllDeals:dataTableAllDeals formAllDeals:messagesAllDeals" icon="ui-icon-trash" title="Disable">
                             <f:attribute name="dealToDelete" value="#{deal}"/>
+                            <p:confirm header="Confirmation" message="Are you sure you want to delete #{deal.dealName} (Serial Number: #{deal.serialNum})?" icon="ui-icon-alert" />
                         </p:commandButton>
                     </p:column>
                 </p:dataTable>  
             </h:form>
+            
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
 
 
             <h:form id="formViewDeal">
@@ -176,6 +182,136 @@
                             </p:column>
                         </p:row>
                     </p:panelGrid>
+                </p:dialog>
+            </h:form>
+
+            <h:form id="formUpdateDeal">
+                <p:dialog id="dialogUpdateDeal" widgetVar="dialogUpdateDeal" header="Update Deal" closable="true">
+
+                    <p:messages id="messagesUpdateDeal" redisplay="false"/>
+
+                    <p:panelGrid>
+                        <p:row>
+                            <p:column>
+                                <h:outputLabel for="serialNum" value="Serial Num: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <h:outputText id="serialNum" value="#{viewAllDealListingsManagedBean.dealToUpdate.serialNum}"/>
+                            </p:column>
+                            <p:column>
+                                &nbsp;
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="dealName" value="Deal Name: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="dealName" value="#{viewAllDealListingsManagedBean.dealToUpdate.dealName}" required="true" requiredMessage="Deal Name is required"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="dealName" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="description" value="Description: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="description" value="#{viewAllDealListingsManagedBean.dealToUpdate.description}" required="true" requiredMessage="Deal Name is required"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="description" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="unitPrice" value="Unit Price: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="unitPrice" value="#{viewAllDealListingsManagedBean.dealToUpdate.unitPrice}" required="true" requiredMessage="Unit Price is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="unitPrice" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="qty" value="Quantity:  " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:inputText id="qty" value="#{viewAllDealListingsManagedBean.dealToUpdate.quantityLeft}" required="true" requiredMessage="Quantity is required" />
+                            </p:column>
+                            <p:column>
+                                <p:message for="qty" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="startDateTime" value="Start Date and Time: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:datePicker id="startDateTime" value="#{viewAllDealListingsManagedBean.dealToUpdate.startDateTime}" required="true" requiredMessage="Deal Name is required"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="startDateTime" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="endDateTime" value="End Date and Time: " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:datePicker id="endDateTime" value="#{viewAllDealListingsManagedBean.dealToUpdate.endDateTime}" required="true" requiredMessage="End Date and Time is required"/>
+                            </p:column>
+                            <p:column>
+                                <p:message for="endDateTime" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="category" value="Category " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="category" value="#{viewAllDealListingsManagedBean.categoryIdToUpdate}">
+                                    <f:selectItem itemValue="0" itemLabel="[Select One]" noSelectionOption="true" />
+                                    <f:selectItems value="#{viewAllDealListingsManagedBean.categories}" var="cat" itemValue="#{cat.categoryId}" itemLabel="#{cat.name}" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="category" />
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column>
+                                <p:outputLabel for="tags" value="Tag(s) " style="font-weight: bold;" />
+                            </p:column>
+                            <p:column>
+                                <p:selectManyMenu id="tags" value="#{viewAllDealListingsManagedBean.tagIdToUpdate}" showCheckbox="true">
+                                    <f:selectItems value="#{viewAllDealListingsManagedBean.tags}" var="tg" itemValue="#{tg.tagId}" itemLabel="#{tg.name}" />
+                                </p:selectManyMenu>
+                            </p:column>
+                            <p:column>
+                                <p:message for="tags" />
+                            </p:column>
+                        </p:row>
+                        
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:commandButton type="reset" value="Clear"/>&nbsp;
+                                <p:commandButton value="Update Product" update="@form formAllDeals:dataTableAllDeals" actionListener="#{viewAllDealListingsManagedBean.updateDeal}" oncomplete="PF('dialogUpdateDeal').show();" />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+
                 </p:dialog>
             </h:form>
 

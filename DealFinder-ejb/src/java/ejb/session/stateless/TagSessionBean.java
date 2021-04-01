@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.Tag;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.ejb.Local;
@@ -173,5 +174,18 @@ public class TagSessionBean implements TagSessionBeanLocal {
         }
 
         return msg;
+    }
+    
+    @Override
+    public List<String> retrieveAllTagNames()
+    {
+        List<Tag> tags = retrieveAllTags();
+        List<String> tagNames = new ArrayList<>();
+        for(Tag t: tags)
+        {
+            tagNames.add(t.getName());
+        }
+        
+        return tagNames;
     }
 }
