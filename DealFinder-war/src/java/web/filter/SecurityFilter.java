@@ -110,7 +110,9 @@ public class SecurityFilter implements Filter
         {
             if(path.equals("/home.xhtml") ||
                 path.equals("/businessManagement/createDealListings.xhtml") ||
-                path.equals("/businessManagement/viewAllDealListings.xhtml"))
+                path.equals("/businessManagement/viewAllDealListings.xhtml") ||
+                path.equals("/businessManagement/salesReport.xhtml")   
+                )
             {
                 return true;
             }
@@ -129,6 +131,7 @@ public class SecurityFilter implements Filter
     {
         if(path.equals("/index.xhtml") ||
             path.equals("/accessRightError.xhtml") ||
+            path.equals("/accountManagement/register.xhtml") || 
             path.startsWith("/javax.faces.resource"))
         {
             return true;

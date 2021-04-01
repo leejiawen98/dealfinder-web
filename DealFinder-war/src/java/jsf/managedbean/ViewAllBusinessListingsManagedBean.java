@@ -8,7 +8,6 @@ package jsf.managedbean;
 import ejb.session.stateless.DealSessionBeanLocal;
 import ejb.session.stateless.TagSessionBeanLocal;
 import entity.Deal;
-import entity.Tag;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -18,7 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.faces.view.ViewScoped;
 import util.exception.DealNotFoundException;
-import util.exception.DeleteDealException;
 
 /**
  *

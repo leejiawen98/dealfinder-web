@@ -10,6 +10,7 @@ import entity.Customer;
 import entity.User;
 import java.util.List;
 import java.util.Set;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,6 +22,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import util.exception.BankAccountNotFoundException;
 import util.exception.BusinessNotFoundException;
 import util.exception.BusinessNotVerifiedException;
 import util.exception.BusinessUsernameExistException;
@@ -38,6 +40,9 @@ import util.security.CryptographicHelper;
  */
 @Stateless
 public class BusinessSessionBean implements BusinessSessionBeanLocal {
+
+    @EJB
+    private BankAccountSessionBeanLocal bankAccountSessionBean;
 
     @PersistenceContext(unitName = "DealFinder-ejbPU")
     private EntityManager em;
@@ -170,12 +175,23 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
         Business businessToRemove = getBusinessByBusinessId(businessId);
         
         if(businessToRemove.getSaleTransactions().isEmpty()){
-            businessToRemove.getBankAccount().setBusiness(null);
-            businessToRemove.getDeals().remove(businessToRemove);
-            em.remove(businessToRemove);
+            if (businessToRemove.getBankAccount() == null)
+            {
+                em.remove(businessToRemove);
+            }
+            else
+            {
+                try
+                {
+                    bankAccountSessionBean.deleteBankAccount(businessToRemove.getBankAccount().getAccId());
+                    em.remove(businessToRemove);
+                }
+                catch (BankAccountNotFoundException ex)
+                {
+                    em.remove(businessToRemove);
+                }
+            }
         }
-
-        em.remove(businessToRemove);
     }
 
     private String prepareInputDataValidationErrorsMessage(Set<ConstraintViolation<Business>> constraintViolations) {

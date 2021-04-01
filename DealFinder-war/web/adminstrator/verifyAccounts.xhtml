@@ -8,11 +8,16 @@
 
     <ui:define name="content">
         <div style="margin:30px">
-            <h3>Manage Business Accounts</h3>
             <h:form id="accountsForm">
-                <p:dataTable id="acc" value="#{verifyAccountsManagedBean.businessAcc}" var="acc" selectionMode="single" selection="#{verifyAccountsManagedBean.selectedBusiness}" rowKey="#{acc.id}" widgetVar="dtAcc">
+                <p:dataTable id="acc" value="#{verifyAccountsManagedBean.businessAcc}" var="acc" selectionMode="single" paginator="true" selection="#{verifyAccountsManagedBean.selectedBusiness}" rowKey="#{acc.id}" widgetVar="dtAcc">
                     <p:ajax event="rowSelect" oncomplete="PF('accountDialog').show()" update=":accountsForm:accountDialog" />
 
+                    <f:facet name="header">
+                        <div style="text-align: left">
+                            Manage Business Accounts
+                        </div>
+                    </f:facet>
+                    
                     <p:column headerText="Account ID" sortBy="#{acc.id}">
                         <h:outputText value="#{acc.id}"/>
                     </p:column>
@@ -83,12 +88,12 @@
                                         
                                     <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
                                         <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes">
-                                            <f:ajax event="click" execute="@form" render="@form" listener="#{verifyAccountsManagedBean.delete}"  />
+                                            <p:ajax event="click" update=":accountsForm" listener="#{verifyAccountsManagedBean.delete}"  />
                                         </p:commandButton>
                                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-flat"/>
                                     </p:confirmDialog>
                                         
-                                    <p:growl life="2000">
+                                    <p:growl life="2000" severity="warn,error,info">
                                         <p:autoUpdate />
                                     </p:growl>
                                     </div>

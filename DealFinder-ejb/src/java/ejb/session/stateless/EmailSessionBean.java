@@ -5,10 +5,13 @@
  */
 package ejb.session.stateless;
 
+import entity.Business;
 import java.util.concurrent.Future;
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
+import util.email.EmailManager;
+import util.exception.EmailException;
 
 /**
  *
@@ -17,9 +20,26 @@ import javax.ejb.Stateless;
 @Stateless
 public class EmailSessionBean implements EmailSessionBeanLocal {
 
-    private final String FROM_EMAIL_ADDRESS = "xxx <xxx@gmail.com>";
-    private final String GMAIL_USERNAME = "xxx@gmail.com";
-    private final String GMAIL_PASSWORD = "xxx";
+//    private final String FROM_EMAIL_ADDRESS = "xxx <xxx@gmail.com>";
+//    private final String GMAIL_USERNAME = "xxx@gmail.com";
+//    private final String GMAIL_PASSWORD = "xxx";
+    
+    @Override
+    @Asynchronous
+    public Future<Boolean> emailBusinessVerification(Business business, String emailBody) throws EmailException, InterruptedException
+    {
+        EmailManager emailManager = new EmailManager("leejiawen98@gmail.com", "Endeline1234.");
+        try
+        {
+            Boolean result = emailManager.email("leejiawen98@gmail.com", business.getEmail(), emailBody);
+            return new AsyncResult<>(result);
+        }
+        catch (Exception ex)
+        {
+            throw new EmailException(ex.getMessage());
+        }
+        
+    }
       
 //    @Override
 //    public Boolean emailCheckoutNotificationSync(SaleTransactionEntity saleTransactionEntity, String toEmailAddress)

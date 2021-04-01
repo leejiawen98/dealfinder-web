@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../template/defaultTemplate.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form id="salesForm">
+                <p:dataTable id="sales" value="#{salesReportManagedBean.sales}" var="sale" rowKey="#{sale.id}" widgetVar="dtSales" paginator="true">
+
+                    <f:facet name="header">
+                        <div style="height:20px; padding:10px">
+                            <div style="float: right">
+                                Total Sales in #{salesReportManagedBean.selectedMonth}:
+                                <h:outputLabel value="#{salesReportManagedBean.totalAmt}">
+                                    <f:convertNumber currencySymbol="$" type="currency"/>
+                                </h:outputLabel>
+                            </div>
+                            <div style="float: left">
+                                Sales in
+                                <h:outputLabel value="Month" style= "margin-right:10px"/>
+                                <p:selectOneMenu value="#{salesReportManagedBean.selectedMonth}" style="bottom:5px">
+                                    <p:ajax event="change" update=":salesForm" listener="#{salesReportManagedBean.changeMonth()}"/> 
+                                    <f:selectItems value="#{salesReportManagedBean.month}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div style="float: left;margin-top:-8px;margin-left: 10px">
+                                <p:commandButton value="PDF" icon="pi pi-file-pdf" actionListener="#{salesReportManagedBean.generateReport}" ajax="false"/>
+                            </div>
+                        </div>
+                    </f:facet>
+                    
+                    <p:column headerText="Transcation ID" sortBy="#{sale.saleTransactionId}">
+                        <h:outputText value="#{sale.saleTransactionId}"/>
+                    </p:column>
+
+                    <p:column headerText="Deal" sortBy="#{sale.deal.dealName}" filterBy="#{sale.deal.dealName}">
+                        <h:outputText value="#{sale.deal.dealName}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Quantity" sortBy="#{sale.quantity}">
+                        <h:outputText value="#{sale.quantity}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Total Amount" sortBy="#{sale.totalAmount}"> 
+                        <h:outputText value="#{sale.totalAmount}">
+                            <f:convertNumber currencySymbol="$" type="currency"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <p:column headerText="Customer ID" sortBy="#{sale.user.id}"> 
+                        <h:outputText value="#{sale.user.id}"/>
+                    </p:column>
+                    
+                    <p:column headerText="Date Time" sortBy="#{sale.transactionDateTime}"> 
+                        <h:outputText value="#{sale.transactionDateTime}">
+                            <f:convertDateTime pattern="dd/MM/yyyy HH:mm" timeZone="GMT+8"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                </p:dataTable>
+                <p:growl life="2000" severity="warn,error,info">
+                    <p:autoUpdate />
+                </p:growl>
+            </h:form>
+    </ui:define>
+
+</ui:composition>
