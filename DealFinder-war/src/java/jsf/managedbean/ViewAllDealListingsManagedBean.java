@@ -62,8 +62,7 @@ public class ViewAllDealListingsManagedBean implements Serializable {
     //delete/disable
     private Deal dealToDelete;
     private String reason;
-    
-    
+
     public ViewAllDealListingsManagedBean() {
 
     }
@@ -109,39 +108,46 @@ public class ViewAllDealListingsManagedBean implements Serializable {
                     dealToUpdate.getTags().add(t);
                 }
             }
-            
+
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Deal updated successfully", null));
-            
+
         } catch (DealNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Deal does not exist", null));
-            
+
         } catch (InputDataValidationException | UpdateDealException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while updating the deal: " + ex.getMessage(), null));
-            
+
         } catch (TagNotFoundException ex) {
-           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Tag does not exist", null));
-        
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Tag does not exist", null));
+
         } catch (CategoryNotFoundException ex) {
-           FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Category does not exist", null));
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Category does not exist", null));
         }
     }
-    
-    public void doDisable(ActionEvent event){
-        dealToDelete = (Deal) event.getComponent().getAttributes().get("dealToUpdate");
+
+    public void doDisable(ActionEvent event) {
+        dealToDelete = (Deal) event.getComponent().getAttributes().get("dealToDelete");
+        try {
+            dealSessionBeanLocal.deleteDeal(dealToDelete.getDealId());
+            deals.remove(dealToDelete);
+
+            if (filteredDeals != null) {
+                filteredDeals.remove(dealToDelete);
+            }
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Product deleted successfully", null));
+        } catch (DealNotFoundException ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Deal cannot be found", null));
+        }
+
     }
-    
-    public void disable()
-    {
-        if (!reason.isEmpty())
-        {
-            try{
-                if (dealToDelete.isEnabled())
-                {
+
+    public void disable() {
+        if (!reason.isEmpty()) {
+            try {
+                if (dealToDelete.isEnabled()) {
                     dealToDelete.setEnabled(false);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Deal is disabled", null));
-                }
-                else
-                {
+                } else {
                     dealToDelete.setEnabled(true);
                     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Deal is enabled", null));
                 }
@@ -149,18 +155,14 @@ public class ViewAllDealListingsManagedBean implements Serializable {
 
                 // send email
                 setReason(null);
-            }
-            catch (DealNotFoundException ex)
-            {
+            } catch (DealNotFoundException ex) {
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
             }
-        }
-        else
-        {
+        } else {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Please input a justification", null));
         }
     }
-
+    
 
     public List<Deal> getDeals() {
         return deals;
@@ -241,6 +243,5 @@ public class ViewAllDealListingsManagedBean implements Serializable {
     public void setReason(String reason) {
         this.reason = reason;
     }
-    
-    
+
 }
