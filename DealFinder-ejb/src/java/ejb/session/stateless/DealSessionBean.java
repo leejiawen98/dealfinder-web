@@ -56,7 +56,7 @@ public class DealSessionBean implements DealSessionBeanLocal {
     private TagSessionBeanLocal tagSessionBeanLocal;
 
     @EJB
-    private CategorySessionBeanLocal categorySessionBeanLocal;  
+    private CategorySessionBeanLocal categorySessionBeanLocal;
 
     @PersistenceContext(unitName = "DealFinder-ejbPU")
     private EntityManager em;
@@ -86,7 +86,7 @@ public class DealSessionBean implements DealSessionBeanLocal {
                 }
 
                 Business business = businessSessionBeanLocal.getBusinessByBusinessId(businessId);
-                
+
                 em.persist(newDeal);
                 newDeal.setBusiness(business);
                 newDeal.setCategory(category);
@@ -100,7 +100,7 @@ public class DealSessionBean implements DealSessionBeanLocal {
 
                 em.flush();
                 return newDeal;
-                
+
             } catch (PersistenceException ex) {
                 if (ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                     if (ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")) {
@@ -275,13 +275,13 @@ public class DealSessionBean implements DealSessionBeanLocal {
     }
 
     @Override
-    public List<Deal> retrieveDealByBusinessId(Long businessId){
+    public List<Deal> retrieveDealByBusinessId(Long businessId) {
         Query query = em.createQuery("SELECT d FROM Deal d WHERE d.business.id = :inBusinessId");
         query.setParameter("inBusinessId", businessId);
-        
+
         List<Deal> deals = query.getResultList();
-        
-        for(Deal deal: deals){
+
+        for (Deal deal : deals) {
             deal.getCategory();
             deal.getTags().size();
             deal.getBusiness();
@@ -290,10 +290,10 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getFavCustomers().size();
             deal.getSaleTransactions().size();
         }
-        
+
         return deals;
     }
-    
+
     @Override
     public void updateDeal(Deal deal, Long categoryId, List<Long> tagIds) throws DealNotFoundException, InputDataValidationException, UpdateDealException, TagNotFoundException, CategoryNotFoundException {
         if (deal != null && deal.getDealId() != null) {
@@ -346,21 +346,23 @@ public class DealSessionBean implements DealSessionBeanLocal {
     }
 
     @Override
-    public void deleteDeal(Long dealId) throws DeleteDealException, DealNotFoundException {
+    public void deleteDeal(Long dealId) throws DealNotFoundException {
         Deal dealToRemove = retrieveDealByDealId(dealId);
 
         List<SaleTransaction> saleTransactions = saleTransactionSessionBeanLocal.retrieveSaleTransactionDealByDealId(dealId);
 
-        if (saleTransactions.isEmpty()) {
+        if(saleTransactions.isEmpty()){
             dealToRemove.getBusiness().getDeals().remove(dealToRemove);
             dealToRemove.getReviews().clear();
             dealToRemove.getCustomers().clear();
             dealToRemove.getFavCustomers().clear();
-            
+
             em.remove(dealToRemove);
         } else {
-            throw new DeleteDealException("Deal ID " + dealId + " is associated with existing sale transaction and cannot be deleted!");
+            dealToRemove.setEnabled(false);
+            updateDealStatus(dealToRemove);
         }
+        
     }
 
     @Override
@@ -403,17 +405,13 @@ public class DealSessionBean implements DealSessionBeanLocal {
 
         return msg;
     }
-    
-    public Deal updateDealStatus(Deal deal) throws DealNotFoundException
-    {
-        try
-        {
+
+    public Deal updateDealStatus(Deal deal) throws DealNotFoundException {
+        try {
             Deal dealUpdate = retrieveDealByDealId(deal.getDealId());
             dealUpdate.setEnabled(deal.isEnabled());
             return dealUpdate;
-        }
-        catch (DealNotFoundException ex)
-        {
+        } catch (DealNotFoundException ex) {
             throw new DealNotFoundException(ex.getMessage());
         }
     }

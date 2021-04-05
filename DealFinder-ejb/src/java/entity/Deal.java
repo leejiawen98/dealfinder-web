@@ -64,6 +64,9 @@ public class Deal implements Serializable {
     
     private boolean enabled;
     
+    @Column(nullable = false, length = 65535)
+    private byte[] qrCode;
+    
     @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
     private List<SaleTransaction> saleTransactions;
     
@@ -290,6 +293,14 @@ public class Deal implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public byte[] getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(byte[] qrCode) {
+        this.qrCode = qrCode;
     }
     
     

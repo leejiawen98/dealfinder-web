@@ -80,10 +80,10 @@
                     </p:column>
                 </p:dataTable>  
             </h:form>
-            
-            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" width="20%">
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>
             </p:confirmDialog>
 
 
@@ -95,7 +95,8 @@
                                 <h:outputLabel value="Qr Code: "/>
                             </p:column>
                             <p:column>
-                                <p:graphicImage value="#{viewDealManagedBean.QR}" cache="false" />
+                                <p:graphicImage value="#{viewDealManagedBean.QR}" alt="" cache="false" />
+                                <p:commandButton value="PDF" icon="ui-icon-print" actionListener="#{viewDealManagedBean.generateReport}" ajax="false"/>
                             </p:column> 
                         </p:row>
 
@@ -303,7 +304,7 @@
                                 <p:message for="tags" />
                             </p:column>
                         </p:row>
-                        
+
                         <p:row>
                             <p:column colspan="3">
                                 <p:commandButton type="reset" value="Clear"/>&nbsp;
