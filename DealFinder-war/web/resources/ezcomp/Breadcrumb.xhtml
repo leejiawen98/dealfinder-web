@@ -14,8 +14,13 @@
     <cc:implementation>
         <h:form id="formMain">
             <p:breadCrumb homeDisplay="false">
+<<<<<<< HEAD
                 <p:menuitem icon="pi pi-home" url="#{application.contextPath}/home.xhtml" style="text-decoration-line: none;" />
                 
+=======
+                <p:menuitem icon="ui-icon-home" url="#{application.contextPath}/home.xhtml" style="text-decoration-line: none;" />
+
+>>>>>>> df96d62d23f8aa36bcf5171cd9e43de843db4a03
                 <p:menuitem value="Business Management" rendered="#{cc.attrs.pageName == 'createDealListings' ||
                                                                         cc.attrs.pageName == 'viewDealListings' ||
                                                                         cc.attrs.pageName == 'viewSaleTransactions'}" />

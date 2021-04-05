@@ -30,6 +30,7 @@
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
+<<<<<<< HEAD
                     <file>${file.reference.jasperreports-6.16.0.jar}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
@@ -39,6 +40,21 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.org.apache.commons.logging_1.2.0.v20180409-1502.jar}</file>
+=======
+                    <file>${file.reference.zxing-j2se-1.7.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.javax.mail-1.6.2.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${file.reference.blitzer-1.0.10.jar}</file>
+                    <path-in-war>WEB-INF/lib</path-in-war>
+                </library>
+                <library dirs="200">
+                    <file>${libs.JasperReports_6.16.0.classpath}</file>
+>>>>>>> df96d62d23f8aa36bcf5171cd9e43de843db4a03
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

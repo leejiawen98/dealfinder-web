@@ -13,6 +13,9 @@ import entity.Category;
 import entity.Deal;
 import entity.Tag;
 import java.awt.event.ActionEvent;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,6 +27,9 @@ import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
+import org.primefaces.model.StreamedContent;
 import util.exception.BusinessNotFoundException;
 import util.exception.CategoryNotFoundException;
 import util.exception.CreateNewDealException;
@@ -52,6 +58,10 @@ public class CreateDealListingsManagedBean {
     
     private List<Tag> tagList;
     private List<Category> categoryList;
+    
+    //for qr
+    private StreamedContent QR;
+    private ByteArrayOutputStream rawQR;
 
     public CreateDealListingsManagedBean() {
         newDeal = new Deal();
@@ -63,14 +73,21 @@ public class CreateDealListingsManagedBean {
         tagList = tagSessionBeanLocal.retrieveAllTags();
     }
     
-    public void createNewDealListing(){
+    public void createNewDealListing() throws IOException{
         if(newCategoryId == 0){
             newCategoryId = null;
         }
         
         Business business = (Business)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
         
+        //generate qr code
+        rawQR = QRCode.from(newDeal.getSerialNum()).to(ImageType.PNG).stream();
+        ByteArrayInputStream is = new ByteArrayInputStream(rawQR.toByteArray());
+        byte[] qrImg = new byte[is.available()];
+        is.read(qrImg);
+        
         try {
+            newDeal.setQrCode(qrImg);
             Deal deal = dealSessionBeanLocal.createNewDeal(newDeal, newCategoryId, newTagIds, business.getId());
             
             newDeal = new Deal();

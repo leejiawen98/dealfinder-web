@@ -47,7 +47,13 @@ public interface DealSessionBeanLocal {
     
     public void updateDeal(Deal deal, Long categoryId, List<Long> tagIds) throws DealNotFoundException, InputDataValidationException, UpdateDealException, TagNotFoundException, CategoryNotFoundException;
    
+<<<<<<< HEAD
     public void deleteDeal(Long dealId) throws DeleteDealException, DealNotFoundException;
+=======
+    public void deleteDeal(Long dealId) throws DealNotFoundException;
+
+    public List<Deal> retrieveDealByBusinessId(Long businessId);
+>>>>>>> df96d62d23f8aa36bcf5171cd9e43de843db4a03
     
     public Deal updateDealStatus(Deal deal) throws DealNotFoundException;
 }
