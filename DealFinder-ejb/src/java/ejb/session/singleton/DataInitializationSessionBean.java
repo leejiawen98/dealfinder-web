@@ -82,10 +82,10 @@ public class DataInitializationSessionBean {
         List<Admin> admins = adminSessionBean.getAllAdmins();
         if (admins.isEmpty()) {
             initialiseAdmins();
-//            initialiseBusiness();
-//            initialiseCategoryTags();
-              initialiseData();
-              initialiseSales();
+            initialiseBusiness();
+            initialiseCategoryTags();
+//              initialiseData();
+//              initialiseSales();
         }
     }
 

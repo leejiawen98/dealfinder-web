@@ -27,6 +27,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import util.exception.CategoryNotFoundException;
 import util.exception.DealNotFoundException;
+import util.exception.DeleteDealException;
 import util.exception.InputDataValidationException;
 import util.exception.TagNotFoundException;
 import util.exception.UpdateDealException;
@@ -135,7 +136,7 @@ public class ViewAllDealListingsManagedBean implements Serializable {
                 filteredDeals.remove(dealToDelete);
             }
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Product deleted successfully", null));
-        } catch (DealNotFoundException ex) {
+        } catch (DealNotFoundException | DeleteDealException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Deal cannot be found", null));
         }
 
