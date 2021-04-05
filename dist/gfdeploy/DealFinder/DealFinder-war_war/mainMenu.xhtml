@@ -6,18 +6,20 @@
                 xmlns:p="http://primefaces.org/ui">
     <nav>
         <h:form>
-            <p:menu style="width:200px">
-                <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Business'}">
-                    <p:menuitem value="Create Listings" />
-                    <p:menuitem value="View all Listings" />
-                    <p:menuitem value="View Sales (TBC)" />                    
+            <p:panelMenu style="width:230px">
+                <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Business'}" expanded="true">
+                    <p:menuitem value="Create Listings" outcome="/businessManagement/createDealListings.xhtml" icon="pi pi-plus"/>
+                    <p:menuitem value="View all Listings" outcome="/businessManagement/viewAllDealListings.xhtml" icon="pi pi-list" />
+                    <p:menuitem value="View Sales" icon="pi pi-dollar" outcome="/businessManagement/salesReport.xhtml" />                    
                 </p:submenu>
                 
                 <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Administrator'}">
-                    <p:menuitem value="Verify Businesses" />
-                    <p:menuitem value="View all Listings" />
+                    <p:submenu label="Businesses" expanded="true">
+                        <p:menuitem value="Manage Accounts" outcome="/adminstrator/verifyAccounts" icon="pi pi-users"/>
+                        <p:menuitem value="Manage Listings" outcome="/adminstrator/viewBusinessListings" icon="pi pi-list"/>
+                    </p:submenu>
                 </p:submenu>
-            </p:menu>
+            </p:panelMenu>
         </h:form>
     </nav>
 </ui:composition>
