@@ -3,17 +3,5 @@
 <glassfish-web-app error-url="">
   <context-root>/DealFinder-war</context-root>
   <resource-ref>
-<<<<<<< HEAD
-    <res-ref-name>dealFinder</res-ref-name>
-=======
     <res-ref-name>dealfinderbusinessDataSource</res-ref-name>
->>>>>>> df96d62d23f8aa36bcf5171cd9e43de843db4a03
-    <jndi-name>jdbc/dealFinder</jndi-name>
-  </resource-ref>
-  <class-loader delegate="true"/>
-  <jsp-config>
-    <property name="keepgenerated" value="true">
-      <description>Keep a copy of the generated servlet class' java code.</description>
-    </property>
-  </jsp-config>
-</glassfish-web-app>
+    <res-ref-name>dealfinderbusinessDataSource</res-ref-name>
