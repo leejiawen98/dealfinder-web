@@ -6,10 +6,6 @@
     <res-ref-name>dealFinder</res-ref-name>
     <jndi-name>jdbc/dealFinder</jndi-name>
   </resource-ref>
-  <resource-ref>
-    <res-ref-name>dealfinderbusinessDataSource</res-ref-name>
-    <jndi-name>jdbc/dealFinder</jndi-name>
-  </resource-ref>
   <class-loader delegate="true"/>
   <jsp-config>
     <property name="keepgenerated" value="true">
