@@ -39,8 +39,8 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class ViewDealManagedBean implements Serializable {
 
-    @Resource(name = "dealfinderbusinessDataSource")
-    private DataSource dealfinderbusinessDataSource;
+    @Resource(name = "dealFinder")
+    private DataSource dealFinder;
     
     private Deal dealToView;
 
@@ -71,7 +71,7 @@ public class ViewDealManagedBean implements Serializable {
             InputStream reportStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreportbusiness/qr_code_report.jasper");
             OutputStream outputStream = FacesContext.getCurrentInstance().getExternalContext().getResponseOutputStream();
 
-            JasperRunManager.runReportToPdfStream(reportStream, outputStream, parameters, dealfinderbusinessDataSource.getConnection());
+            JasperRunManager.runReportToPdfStream(reportStream, outputStream, parameters, dealFinder.getConnection());
         } catch (JRException ex) {
             ex.printStackTrace();
         } catch (SQLException ex) {
