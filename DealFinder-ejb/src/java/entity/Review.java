@@ -40,6 +40,10 @@ public class Review implements Serializable {
     @JoinColumn(nullable = false)
     private Deal deal;
     
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Customer customer;
+    
     public Review() {
     }
 
@@ -103,6 +107,14 @@ public class Review implements Serializable {
 
     public void setDeal(Deal deal) {
         this.deal = deal;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
     
     

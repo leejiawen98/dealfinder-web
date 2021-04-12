@@ -60,8 +60,8 @@ public class CreateDealListingsManagedBean {
     private List<Category> categoryList;
     
     //for qr
-    private StreamedContent QR;
-    private ByteArrayOutputStream rawQR;
+//    private StreamedContent QR;
+//    private ByteArrayOutputStream rawQR;
 
     public CreateDealListingsManagedBean() {
         newDeal = new Deal();
@@ -81,13 +81,12 @@ public class CreateDealListingsManagedBean {
         Business business = (Business)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
         
         //generate qr code
-        rawQR = QRCode.from(newDeal.getSerialNum()).to(ImageType.PNG).stream();
-        ByteArrayInputStream is = new ByteArrayInputStream(rawQR.toByteArray());
-        byte[] qrImg = new byte[is.available()];
-        is.read(qrImg);
+//        rawQR = QRCode.from(business.getId().toString()).to(ImageType.PNG).stream();
+//        ByteArrayInputStream is = new ByteArrayInputStream(rawQR.toByteArray());
+//        byte[] qrImg = new byte[is.available()];
+//        is.read(qrImg);
         
         try {
-            newDeal.setQrCode(qrImg);
             Deal deal = dealSessionBeanLocal.createNewDeal(newDeal, newCategoryId, newTagIds, business.getId());
             
             newDeal = new Deal();

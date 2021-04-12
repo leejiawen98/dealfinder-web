@@ -61,11 +61,10 @@ public class Deal implements Serializable {
     private Integer quantityLeft;
     @Column(nullable = false, precision = 7, scale = 2)
     private BigDecimal unitPrice;
-    
+   
+    private boolean redeemed;
     private boolean enabled;
     
-    @Column(nullable = false, length = 65535)
-    private byte[] qrCode;
     
     @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
     private List<SaleTransaction> saleTransactions;
@@ -97,6 +96,7 @@ public class Deal implements Serializable {
         customers = new ArrayList<>();
         reviews = new ArrayList<>();
         enabled = true;
+        redeemed = false;
     }
 
     public Deal(String serialNum, String dealName, String description, Date startDateTime, Date endDateTime, Integer quantityLeft, BigDecimal unitPrice) {
@@ -295,12 +295,12 @@ public class Deal implements Serializable {
         this.enabled = enabled;
     }
 
-    public byte[] getQrCode() {
-        return qrCode;
+    public boolean isRedeemed() {
+        return redeemed;
     }
 
-    public void setQrCode(byte[] qrCode) {
-        this.qrCode = qrCode;
+    public void setRedeemed(boolean redeemed) {
+        this.redeemed = redeemed;
     }
     
     

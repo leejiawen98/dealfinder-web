@@ -66,8 +66,7 @@
                     </p:column>
 
                     <p:column headerText="Action" style="width:14%;">
-                        <p:commandButton update="formViewDeal" oncomplete="PF('dialogViewDeal').show()" icon="ui-icon-document" title="View" actionListener="#{viewDealManagedBean.generateQR}">
-                            <f:attribute name="dealToDisplayQR" value="#{deal}" />
+                        <p:commandButton update="formViewDeal" oncomplete="PF('dialogViewDeal').show()" icon="ui-icon-document" title="View">
                             <f:setPropertyActionListener value="#{deal}" target="#{viewAllDealListingsManagedBean.viewDealManagedBean.dealToView}"/>
                         </p:commandButton>
                         <p:commandButton actionListener="#{viewAllDealListingsManagedBean.doUpdateDeal}" update="formUpdateDeal" oncomplete="PF('dialogUpdateDeal').show()" icon="ui-icon-pencil" title="Update">
@@ -90,16 +89,6 @@
             <h:form id="formViewDeal">
                 <p:dialog id="dialogViewDeal" widgetVar="dialogViewDeal" header="View Deal" closable="true">
                     <p:panelGrid>
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Qr Code: "/>
-                            </p:column>
-                            <p:column>
-                                <p:graphicImage value="#{viewDealManagedBean.QR}" alt="" cache="false" />
-                                <p:commandButton value="PDF" icon="ui-icon-print" actionListener="#{viewDealManagedBean.generateReport}" ajax="false"/>
-                            </p:column> 
-                        </p:row>
-
                         <p:row>
                             <p:column>
                                 <h:outputLabel value="Serial Num: "/>

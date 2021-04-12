@@ -82,7 +82,7 @@
                         <p:outputLabel for="startDateTime" value="Start Date and Time: " style="font-weight: bold;" />
                     </p:column>
                     <p:column>
-                        <p:datePicker id="startDateTime" value="#{createDealListingsManagedBean.newDeal.startDateTime}" required="true" requiredMessage="Start Date and Time is required" />
+                        <p:datePicker id="startDateTime" value="#{createDealListingsManagedBean.newDeal.startDateTime}" showTime="true" required="true" requiredMessage="Start Date and Time is required" />
                     </p:column>
                     <p:column>
                         <p:message for="startDateTime" />
@@ -94,7 +94,7 @@
                         <p:outputLabel for="endDateTime" value="End Date and Time: " style="font-weight: bold;" />
                     </p:column>
                     <p:column>
-                        <p:datePicker id="endDateTime" value="#{createDealListingsManagedBean.newDeal.endDateTime}" required="true" requiredMessage="End Date and Time is required"/>
+                        <p:datePicker id="endDateTime" value="#{createDealListingsManagedBean.newDeal.endDateTime}" showTime="true" required="true" requiredMessage="End Date and Time is required"/>
                     </p:column>
                     <p:column>
                         <p:message for="endDateTime" />

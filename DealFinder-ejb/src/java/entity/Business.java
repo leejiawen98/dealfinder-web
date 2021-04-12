@@ -31,18 +31,21 @@ public class Business extends User implements Serializable {
     @NotNull
     @Size(max = 32)
     private String name;
-    
+
     @OneToOne(mappedBy = "business", fetch = FetchType.LAZY)
     private BankAccount bankAccount;
-    
+
     @OneToMany(mappedBy = "business", fetch = FetchType.LAZY)
     private List<Deal> deals;
-    
+
     @Column(nullable = false, length = 64)
     private String address;
-    
+
     @Column(nullable = false, length = 1)
     private boolean verified;
+
+    @Column(nullable = false, length = 65535)
+    private byte[] qrCode;
 
     public Business() {
         deals = new ArrayList<>();
@@ -53,8 +56,8 @@ public class Business extends User implements Serializable {
         this.name = name;
         this.address = address;
         this.verified = false;
+        this.qrCode = new byte[0];
     }
-    
 
     @Override
     public int hashCode() {
@@ -104,7 +107,7 @@ public class Business extends User implements Serializable {
     public void setDeals(List<Deal> deals) {
         this.deals = deals;
     }
-    
+
     public String getAddress() {
         return address;
     }
@@ -120,5 +123,13 @@ public class Business extends User implements Serializable {
     public void setVerified(boolean verified) {
         this.verified = verified;
     }
-    
+
+    public byte[] getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(byte[] qrCode) {
+        this.qrCode = qrCode;
+    }
+
 }

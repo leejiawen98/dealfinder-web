@@ -97,11 +97,7 @@ public class DataInitializationSessionBean {
 
     // yeerou
     public void initialiseBusiness() {
-        try {
-            businessSessionBean.createBusiness(new Business("Business 1", "biz1", "password", "business1@gmail.com", "88888888", "biz1"));
-        } catch (BusinessUsernameExistException | UnknownPersistenceException | InputDataValidationException ex) {
-            ex.printStackTrace();
-        }
+
     }
 
     public void initialiseCategoryTags() {

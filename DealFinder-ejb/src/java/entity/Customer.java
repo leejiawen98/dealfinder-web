@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -47,10 +48,14 @@ public class Customer extends User implements Serializable {
     
     @OneToOne(mappedBy = "customer", fetch = FetchType.LAZY)
     private CreditCard creditCard;
+    
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Review> reviews;
 
     public Customer() {
         favDeals = new ArrayList<>();
         deals = new ArrayList<>();
+        reviews = new ArrayList<>();
     }
 
     public Customer(String firstName, String lastName, BigDecimal eWalletAmount, String username, String password, String email, String mobileNum) {
@@ -134,6 +139,15 @@ public class Customer extends User implements Serializable {
     public void setCreditCard(CreditCard creditCard) {
         this.creditCard = creditCard;
     }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+    
     
     
 }

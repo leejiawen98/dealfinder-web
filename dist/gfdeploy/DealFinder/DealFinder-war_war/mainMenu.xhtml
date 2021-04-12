@@ -8,9 +8,10 @@
         <h:form>
             <p:panelMenu style="width:230px">
                 <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Business'}" expanded="true">
-                    <p:menuitem value="Create Listings" outcome="/businessManagement/createDealListings.xhtml" icon="pi pi-plus"/>
-                    <p:menuitem value="View all Listings" outcome="/businessManagement/viewAllDealListings.xhtml" icon="pi pi-list" />
-                    <p:menuitem value="View Sales" icon="pi pi-dollar" outcome="/businessManagement/salesReport.xhtml" />                    
+                    <p:menuitem value="Home" outcome="/home.xhtml" icon="ui-icon-home"/>
+                    <p:menuitem value="Create Listings" outcome="/businessManagement/createDealListings.xhtml" icon="ui-icon-plus"/>
+                    <p:menuitem value="View all Listings" outcome="/businessManagement/viewAllDealListings.xhtml" icon="ui-icon-document-b" />
+                    <p:menuitem value="View Sales" icon="ui-icon-clipboard" outcome="/businessManagement/salesReport.xhtml" />                    
                 </p:submenu>
                 
                 <p:submenu label="Main Menu" rendered="#{sessionScope.accountType == 'Administrator'}">

@@ -7,15 +7,25 @@ package jsf.managedbean;
 
 import ejb.session.stateless.BusinessSessionBeanLocal;
 import entity.Business;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import util.exception.BusinessNotFoundException;
 import util.exception.BusinessUsernameExistException;
 import util.exception.InputDataValidationException;
 import util.exception.UnknownPersistenceException;
+import util.exception.UpdateBusinessException;
 
 /**
  *
@@ -35,8 +45,12 @@ public class RegisterManagedBean {
     private String mobileNum;
     private String address;
     
+    private StreamedContent QR;
+    private ByteArrayOutputStream rawQR;
+    
+    
     public RegisterManagedBean() {
-        
+
     }
     
     public void register() throws IOException
@@ -44,8 +58,17 @@ public class RegisterManagedBean {
         try
         {
             Business business = new Business(name, username, password, email, mobileNum, address);
-            businessSessionBean.createBusiness(business);
+            Long businessId = businessSessionBean.createBusiness(business);
             FacesContext.getCurrentInstance().addMessage("registersucccess", new FacesMessage(FacesMessage.SEVERITY_INFO, "Registration submitted", "Please await for account verification"));
+            
+            //generate qr code and update
+            rawQR = QRCode.from(businessId.toString()).to(ImageType.PNG).stream();
+            ByteArrayInputStream is = new ByteArrayInputStream(rawQR.toByteArray());
+            byte[] qrImg = new byte[is.available()];
+            is.read(qrImg);
+            
+            business.setQrCode(qrImg);
+            businessSessionBean.updateBusiness(business);
             
             username = "";
             password = "";
@@ -61,6 +84,10 @@ public class RegisterManagedBean {
         catch(InputDataValidationException | UnknownPersistenceException ex)
         {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Input not valid! " + ex.getMessage(), null));
+        } 
+        catch (BusinessNotFoundException | UpdateBusinessException ex) 
+        {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "An error has occurred while registering a new business: " + ex.getMessage(), null));
         }
     }
 

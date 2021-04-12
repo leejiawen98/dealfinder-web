@@ -159,6 +159,7 @@ public class BusinessSessionBean implements BusinessSessionBeanLocal {
                     businessToUpdate.setMobileNum(business.getMobileNum());
                     businessToUpdate.setName(business.getName());
                     businessToUpdate.setVerified(business.getVerified());
+                    businessToUpdate.setQrCode(business.getQrCode());
                 } else {
                     throw new UpdateBusinessException("Username of businesss record to be updated does not match the existing record");
                 }
