@@ -40,8 +40,8 @@ public class Customer extends User implements Serializable {
     @Column(nullable = false, precision = 7, scale = 2)
     private BigDecimal eWalletAmount;
     
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Deal> favDeals;
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Favourite> favourites;
     
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Deal> deals;
@@ -51,11 +51,17 @@ public class Customer extends User implements Serializable {
     
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
     private List<Review> reviews;
+    
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY)
+    private List<Redemption> redemptions;
+    
+    
 
     public Customer() {
-        favDeals = new ArrayList<>();
+        favourites = new ArrayList<>();
         deals = new ArrayList<>();
         reviews = new ArrayList<>();
+        redemptions = new ArrayList<>();
     }
 
     public Customer(String firstName, String lastName, BigDecimal eWalletAmount, String username, String password, String email, String mobileNum) {
@@ -65,7 +71,6 @@ public class Customer extends User implements Serializable {
         this.eWalletAmount = eWalletAmount;
         
     }
-    
 
     @Override
     public int hashCode() {
@@ -116,12 +121,12 @@ public class Customer extends User implements Serializable {
         this.eWalletAmount = eWalletAmount;
     }
 
-    public List<Deal> getFavDeals() {
-        return favDeals;
+    public List<Favourite> getFavourites() {
+        return favourites;
     }
 
-    public void setFavDeals(List<Deal> favDeals) {
-        this.favDeals = favDeals;
+    public void setFavourites(List<Favourite> favourites) {
+        this.favourites = favourites;
     }
 
     public List<Deal> getDeals() {
@@ -146,6 +151,14 @@ public class Customer extends User implements Serializable {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<Redemption> getRedemptions() {
+        return redemptions;
+    }
+
+    public void setRedemptions(List<Redemption> redemptions) {
+        this.redemptions = redemptions;
     }
     
     

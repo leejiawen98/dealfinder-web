@@ -39,7 +39,6 @@ public class SaleTransaction implements Serializable {
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     @Column(nullable = false)
     @NotNull
-    @Future
     private Date transactionDateTime;
     @Column(nullable = false)
     @Min(1)

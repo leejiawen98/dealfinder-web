@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entity.Business;
 import entity.Category;
+import entity.Customer;
 import entity.Deal;
 import entity.SaleTransaction;
 import entity.Tag;
@@ -130,8 +131,9 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getBusiness();
             deal.getReviews().size();
             deal.getCustomers().size();
-            deal.getFavCustomers().size();
+            deal.getFavourites().size();
             deal.getSaleTransactions().size();
+            deal.getRedemptions().size();
         }
 
         return deals;
@@ -150,8 +152,9 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getBusiness();
             deal.getReviews().size();
             deal.getCustomers().size();
-            deal.getFavCustomers().size();
+            deal.getFavourites().size();
             deal.getSaleTransactions().size();
+            deal.getRedemptions().size();
         }
 
         return deals;
@@ -244,9 +247,10 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getBusiness();
             deal.getReviews().size();
             deal.getCustomers().size();
-            deal.getFavCustomers().size();
+            deal.getFavourites().size();
             deal.getSaleTransactions().size();
-
+            deal.getRedemptions().size();
+            
             return deal;
         } else {
             throw new DealNotFoundException("Deal Id " + dealId + " does not exist!");
@@ -265,8 +269,9 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getBusiness();
             deal.getReviews().size();
             deal.getCustomers().size();
-            deal.getFavCustomers().size();
+            deal.getFavourites().size();
             deal.getSaleTransactions().size();
+            deal.getRedemptions().size();
 
             return deal;
         } catch (NoResultException | NonUniqueResultException ex) {
@@ -287,11 +292,30 @@ public class DealSessionBean implements DealSessionBeanLocal {
             deal.getBusiness();
             deal.getReviews().size();
             deal.getCustomers().size();
-            deal.getFavCustomers().size();
+            deal.getFavourites().size();
             deal.getSaleTransactions().size();
+            deal.getRedemptions().size();
         }
 
         return deals;
+    }
+    
+    
+    @Override
+    public List<Deal> retrievePurchasedDealsByCustIdandBizId (Long custId, Long bizId)
+    {
+        List<Deal> purchasedDealsInBiz = new ArrayList<>();
+        Customer c = em.find(Customer.class, custId);
+        Customer c1 = em.find(Customer.class, 1l);
+        List<Deal> purchasedDeals = c.getDeals();
+        for (Deal d : purchasedDeals)
+        {
+            if (d.getBusiness().getId() == bizId)
+            {
+                purchasedDealsInBiz.add(d);
+            }
+        }
+        return purchasedDealsInBiz;
     }
 
     @Override
@@ -355,7 +379,8 @@ public class DealSessionBean implements DealSessionBeanLocal {
             dealToRemove.getBusiness().getDeals().remove(dealToRemove);
             dealToRemove.getReviews().clear();
             dealToRemove.getCustomers().clear();
-            dealToRemove.getFavCustomers().clear();
+            dealToRemove.getFavourites().clear();
+            dealToRemove.getRedemptions().clear();
 
             em.remove(dealToRemove);
         } else {

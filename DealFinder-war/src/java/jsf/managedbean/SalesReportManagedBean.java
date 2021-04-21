@@ -41,7 +41,7 @@ import java.text.SimpleDateFormat;
  */
 @Named(value = "salesReportManagedBean")
 @ViewScoped
-public class SalesReportManagedBean implements Serializable{
+public class SalesReportManagedBean implements Serializable {
 
     @Resource(name = "dealFinder")
     private DataSource dealFinder;
@@ -50,41 +50,37 @@ public class SalesReportManagedBean implements Serializable{
     private SaleTransactionSessionBeanLocal saleTransactionSessionBean;
 
     private List<SaleTransaction> sales;
-    
+
     private List<String> month = new ArrayList<>();
-    
+
     private String selectedMonth;
-    
+
     private Business business;
-    
+
     private BigDecimal totalAmt;
-   
 
     public SalesReportManagedBean() {
-        
+
     }
-    
+
     @PostConstruct
-    public void postConstruct()
-    {
+    public void postConstruct() {
         business = (Business) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
         Calendar cal = Calendar.getInstance();
         int mth = cal.getTime().getMonth();
         int i = 0;
-        for (MonthEnum m : MonthEnum.values())
-        {
-            if (mth == i)
+        for (MonthEnum m : MonthEnum.values()) {
+            if (mth == i) {
                 selectedMonth = m.toString();
+            }
             month.add(m.toString());
             i++;
         }
         changeMonth();
     }
-    
-    public void changeMonth()
-    {
-        try
-        {
+
+    public void changeMonth() {
+        try {
             sales = saleTransactionSessionBean.retrieveSaleTransactionDealByBusinessAndMonth(business.getId(), selectedMonth);
             Collections.sort(sales, new Comparator<SaleTransaction>() {
                 @Override
@@ -93,32 +89,25 @@ public class SalesReportManagedBean implements Serializable{
                 }
             });
             getTotalAmtInSelectedMonth();
-        }
-        catch (BusinessNotFoundException ex)
-        {
+        } catch (BusinessNotFoundException ex) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(), null));
         }
     }
-    
-    public void getTotalAmtInSelectedMonth()
-    {
+
+    public void getTotalAmtInSelectedMonth() {
         totalAmt = BigDecimal.ZERO;
-        for (SaleTransaction s: sales)
-        {
+        for (SaleTransaction s : sales) {
             totalAmt = totalAmt.add(s.getTotalAmount());
         }
     }
-    
+
     public void generateReport(ActionEvent event) {
-        if (sales.isEmpty())
-        {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No sales for this month", null));
-        }
-            else
-            {
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        if (sales.isEmpty()) {
+            facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "No sales for this month", null));
+        } else {
             List<Long> st = new ArrayList<>();
-            for (SaleTransaction s: sales)
-            {
+            for (SaleTransaction s : sales) {
                 st.add(s.getSaleTransactionId());
             }
             try {
@@ -129,12 +118,15 @@ public class SalesReportManagedBean implements Serializable{
                 parameters.put("businessAddress", business.getAddress());
                 parameters.put("month", selectedMonth);
                 String relativePath = "./resources/images/";
-                parameters.put("CONTEXT",FacesContext.getCurrentInstance().getExternalContext().getRealPath(relativePath) + "/logo.jpeg");
+                parameters.put("CONTEXT", facesContext.getExternalContext().getRealPath(relativePath) + "/logo.png");
 
-                InputStream reportStream = FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream("/jasperreport/salesReportMonth.jasper");
-                OutputStream outputStream = FacesContext.getCurrentInstance().getExternalContext().getResponseOutputStream();
+                InputStream reportStream = facesContext.getExternalContext().getResourceAsStream("/jasperreport/salesReportMonth.jasper");
+                OutputStream outputStream = facesContext.getExternalContext().getResponseOutputStream();
 
                 JasperRunManager.runReportToPdfStream(reportStream, outputStream, parameters, dealFinder.getConnection());
+                facesContext.responseComplete();
+                outputStream.flush();
+                outputStream.close();
             } catch (JRException ex) {
                 ex.printStackTrace();
             } catch (SQLException ex) {
@@ -143,7 +135,7 @@ public class SalesReportManagedBean implements Serializable{
             }
         }
     }
-    
+
     public List<SaleTransaction> getSales() {
         return sales;
     }

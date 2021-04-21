@@ -28,10 +28,10 @@ public class EmailSessionBean implements EmailSessionBeanLocal {
     @Asynchronous
     public Future<Boolean> emailBusinessVerification(Business business, String emailBody) throws EmailException, InterruptedException
     {
-        EmailManager emailManager = new EmailManager("leejiawen98@gmail.com", "Endeline1234.");
+        EmailManager emailManager = new EmailManager("leejiawen1408@gmail.com", "1jlpbynK");
         try
         {
-            Boolean result = emailManager.email("leejiawen98@gmail.com", business.getEmail(), emailBody);
+            Boolean result = emailManager.email("leejiawen1408@gmail.com", business.getEmail(), emailBody);
             return new AsyncResult<>(result);
         }
         catch (Exception ex)

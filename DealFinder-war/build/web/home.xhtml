@@ -10,7 +10,7 @@
         <h3 style="margin: 10px">Welcome, #{sessionScope.accountType == "Administrator" ? sessionScope.user.getFirstName() : sessionScope.user.getName()}</h3>
 
         <style type="text/css">
-            .ui-panel, div.ui-state-hover {
+            .ui-panel{
                 margin: 10px;
                 width: 50%;
             }
@@ -19,29 +19,45 @@
                 width: 50%;
             }
 
+
         </style>
 
+
         <div class="card" >
-            <h:form>
+            <h:form id="formDB" rendered="#{sessionScope.accountType == 'Business'}">
                 <p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true"/>
 
                 <p:dashboard id="board" model="#{dashboardManagedBean.model}">
                     <p:ajax event="reorder" listener="#{dashboardManagedBean.handleReorder}" update="msgs"/>
 
-                    <p:panel id="sports" header="My Business QR Code" style="width:90%;">
+                    <p:panel id="qrcode" header="My Business QR Code" style="width:90%;">
                         <div class="container" style="display: flex; align-items: center;justify-content: left; ">
                             <p:graphicImage value="#{dashboardManagedBean.QR}" alt="" cache="false" />
                             <p:commandButton value="Print" icon="ui-icon-print" actionListener="#{dashboardManagedBean.generateReport}" ajax="false"/>
                         </div>
                     </p:panel>
 
-                    <p:panel id="notification" header="Notification" style="width:90%;">
-                        <h:outputText value="Lifestyle Content"/>
+                    <p:panel id="redemption" header="Redemption" style="width:90%;">
+                        Filter by Deal Serial Number:
+                        <p:selectOneMenu id="deal" value="#{dashboardManagedBean.dealId}" rendered="#{not empty dashboardManagedBean.dealsThatBusinessHave}" style="width:15%">
+                            <f:selectItems value="#{dashboardManagedBean.dealsThatBusinessHave}" var="deal" itemValue="#{deal.dealId}" itemLabel="#{deal.serialNum}" />
+                        </p:selectOneMenu>
+                        <p:commandButton value="Change" actionListener="#{dashboardManagedBean.createOnChangePieModel}" update="formDB:redemption" rendered="#{not empty dashboardManagedBean.dealsThatBusinessHave}" />
+                        &nbsp;
+                        <p:pieChart id="pie" model="#{dashboardManagedBean.pieModel}" style="width: 80%; "/>
                     </p:panel>
 
                     <p:panel id="finance" header="Finance" style="width:90%;">
                         <div class="card">
-                            <p:barChart model="#{dashboardManagedBean.hbarModel}" style="width: 100%; height: 500px;"/>
+                            Filter by Deal Serial Number:
+                            <p:selectOneMenu id="finDeal" value="#{dashboardManagedBean.finDealId}" rendered="#{not empty dashboardManagedBean.dealsThatBusinessHave}" style="width:15%">
+                                <f:selectItem itemValue="null" itemLabel="All" noSelectionOption="true" />
+                                <f:selectItems value="#{dashboardManagedBean.dealsThatBusinessHave}" var="deal" itemValue="#{deal.dealId}" itemLabel="#{deal.serialNum}" />
+                            </p:selectOneMenu>
+                            <p:commandButton value="Change" actionListener="#{dashboardManagedBean.createOnChangeHorizontalBarModel}" update="formDB:finance" rendered="#{not empty dashboardManagedBean.dealsThatBusinessHave}"/>
+
+                            &nbsp;
+                            <p:barChart model="#{dashboardManagedBean.hbarModel}" style="width: 100%; height: 630px;"/>
                         </div>
                     </p:panel>
 

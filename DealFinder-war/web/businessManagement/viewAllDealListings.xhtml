@@ -68,6 +68,7 @@
                     <p:column headerText="Action" style="width:14%;">
                         <p:commandButton update="formViewDeal" oncomplete="PF('dialogViewDeal').show()" icon="ui-icon-document" title="View">
                             <f:setPropertyActionListener value="#{deal}" target="#{viewAllDealListingsManagedBean.viewDealManagedBean.dealToView}"/>
+                            <f:attribute name="dealToView" value="#{deal}"/>
                         </p:commandButton>
                         <p:commandButton actionListener="#{viewAllDealListingsManagedBean.doUpdateDeal}" update="formUpdateDeal" oncomplete="PF('dialogUpdateDeal').show()" icon="ui-icon-pencil" title="Update">
                             <f:attribute name="dealToUpdate" value="#{deal}"/>
@@ -87,92 +88,109 @@
 
 
             <h:form id="formViewDeal">
-                <p:dialog id="dialogViewDeal" widgetVar="dialogViewDeal" header="View Deal" closable="true">
-                    <p:panelGrid>
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Serial Num: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.serialNum}"/>
-                            </p:column>
-                        </p:row>
+                <p:scrollPanel>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Deal Name: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.dealName}"/>
-                            </p:column>
-                        </p:row>
+                    <p:dialog id="dialogViewDeal" widgetVar="dialogViewDeal" header="View Deal" closable="true"  style="overflow:auto">
+                        <p:panelGrid>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Serial Num: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.serialNum}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Description: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.description}"/>
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Deal Name: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.dealName}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Start Date and Time: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.startDateTime}"/>
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Description: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.description}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="End Date and Time: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.endDateTime}"/>
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Start Date and Time: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.startDateTime}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Quantity: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.quantityLeft}"/>
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="End Date and Time: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.endDateTime}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Unit Price: "/>
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.unitPrice}"/>
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Quantity: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.quantityLeft}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Category: " />
-                            </p:column>
-                            <p:column>
-                                <h:outputText value="#{viewDealManagedBean.dealToView.category.name}" />
-                            </p:column>
-                        </p:row>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Unit Price: "/>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.unitPrice}"/>
+                                </p:column>
+                            </p:row>
 
-                        <p:row>
-                            <p:column>
-                                <h:outputLabel value="Tag(s): " />
-                            </p:column>
-                            <p:column>
-                                <p:dataList value="#{viewDealManagedBean.dealToView.tags}" var="tag" type="unordered">
-                                    #{tag.name}
-                                </p:dataList>
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>
-                </p:dialog>
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Category: " />
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="#{viewDealManagedBean.dealToView.category.name}" />
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Tag(s): " />
+                                </p:column>
+                                <p:column>
+                                    <p:dataList value="#{viewDealManagedBean.dealToView.tags}" var="tag" type="unordered">
+                                        #{tag.name}
+                                    </p:dataList>
+                                </p:column>
+                            </p:row>
+
+                            <p:row>
+                                <p:column>
+                                    <h:outputLabel value="Review(s): " />
+                                </p:column>
+                                <p:column>
+                                    <p:dataList value="#{viewDealManagedBean.dealToView.reviews}" var="review">
+                                        <p>#{review.customer.firstName} #{review.customer.lastName}</p>  
+                                        #{review.description} &nbsp; <p:rating id="productRating" value="#{review.dealRating}" stars="5" readonly="true" style="text-align: right;" />
+
+                                    </p:dataList>   
+                                </p:column>
+                            </p:row>
+                                
+                        </p:panelGrid>
+                    </p:dialog>
+                </p:scrollPanel>
             </h:form>
 
             <h:form id="formUpdateDeal">

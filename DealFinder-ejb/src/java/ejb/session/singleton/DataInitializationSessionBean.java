@@ -83,9 +83,9 @@ public class DataInitializationSessionBean {
         if (admins.isEmpty()) {
             initialiseAdmins();
             initialiseBusiness();
-            initialiseCategoryTags();
-//              initialiseData();
-//              initialiseSales();
+            //initialiseCategoryTags();
+            initialiseData();
+            initialiseSales();
         }
     }
 
@@ -143,18 +143,36 @@ public class DataInitializationSessionBean {
             Long b2 = businessSessionBean.createBusiness(new Business("Obba Jjajang", "obba", "password", "e0417580@u.nus.edu", "87364523", "Tanjong Pagar"));
             Long b3 = businessSessionBean.createBusiness(new Business("NTUC", "ntuc", "password", "leejiawen98@hotmail.sg", "98373643", "Hougang"));
             
-            Category c1 = categorySessionBean.createNewCategoryEntity(new Category("Fashion", "Clothes and shoes"), null);
-            Category c2 = categorySessionBean.createNewCategoryEntity(new Category("Luxury Brands", "Designers goods"), 1l);
+            Category catFnB = categorySessionBean.createNewCategoryEntity(new Category("F&B", "F&B"), null);
+            Category catBeauty = categorySessionBean.createNewCategoryEntity(new Category("Beauty", "Beauty"), null);
+            Category catRetail = categorySessionBean.createNewCategoryEntity(new Category("Retail", "Retail"), null);
+            Category catLeisure = categorySessionBean.createNewCategoryEntity(new Category("Leisure", "Leisure"), null);
+            Category catFitness = categorySessionBean.createNewCategoryEntity(new Category("Fitness", "Fitness"), null);
             
-            Category c3 = categorySessionBean.createNewCategoryEntity(new Category("Food", "Food vouchers and deals"), null);
-            Category c4 = categorySessionBean.createNewCategoryEntity(new Category("Korean", "Authentic Korean Restaurants"), 3l);
+            //F&B
+            Category subCatChinese = categorySessionBean.createNewCategoryEntity(new Category("Chinese Cuisine", "Chinese Cuisine"), catFnB.getCategoryId());
+            Category subCatMuslim = categorySessionBean.createNewCategoryEntity(new Category("Muslim Cuisine", "Muslim Cuisine"), catFnB.getCategoryId());
+            Category subCatDessert = categorySessionBean.createNewCategoryEntity(new Category("Dessert", "Dessert"), catFnB.getCategoryId());
+            //Beauty
+            Category subCatFacial = categorySessionBean.createNewCategoryEntity(new Category("Facial", "Facial"), catBeauty.getCategoryId());
+            Category subCatBrows = categorySessionBean.createNewCategoryEntity(new Category("Brows & Lashes", "Brows & Lashes"), catBeauty.getCategoryId());
+            //Retail
+            Category subCatShopping = categorySessionBean.createNewCategoryEntity(new Category("Shopping", "Shopping"), catRetail.getCategoryId());
+            //Leisure
+            Category subCatMovie = categorySessionBean.createNewCategoryEntity(new Category("Movies", "Movies"), catLeisure.getCategoryId());
+            Category subCatAttraction = categorySessionBean.createNewCategoryEntity(new Category("Attractions", "Attractions"), catLeisure.getCategoryId());
+            //Fitness
+            Category subCatGym = categorySessionBean.createNewCategoryEntity(new Category("Gym", "Gym"), catFitness.getCategoryId());
             
-            Category c5 = categorySessionBean.createNewCategoryEntity(new Category("Grocery", "Grocery deals"), null);
-            Category c6 = categorySessionBean.createNewCategoryEntity(new Category("Instant Noodles", "Instant noodle bundles"), 5l);
+            Tag tagEntityPopular = tagSessionBean.createNewTagEntity(new Tag("popular"));
+            Tag tagEntityDiscount = tagSessionBean.createNewTagEntity(new Tag("discount"));
+            Tag tagEntityNew = tagSessionBean.createNewTagEntity(new Tag("new"));
+            Tag tagEntityOneForOne = tagSessionBean.createNewTagEntity(new Tag("1-For-1"));
+
             
-            Tag t1 = tagSessionBean.createNewTagEntity(new Tag("Popular"));
-            Tag t2 = tagSessionBean.createNewTagEntity(new Tag("Limited"));
-            Tag t3 = tagSessionBean.createNewTagEntity(new Tag("New"));
+            Tag t1 = tagSessionBean.createNewTagEntity(new Tag("limited"));
+            Tag t2 = tagSessionBean.createNewTagEntity(new Tag("local"));
+            Tag t3 = tagSessionBean.createNewTagEntity(new Tag("exclusive"));
             
             List<Long> tags1 = new ArrayList<>();
             tags1.add(t1.getTagId());
@@ -176,9 +194,9 @@ public class DataInitializationSessionBean {
             cal.add(Calendar.DATE, +1);
             Date result4 = cal.getTime();
             
-            Deal d1 = dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45)), c2.getCategoryId(), tags1, b1);
-            Deal d2 = dealSessionBean.createNewDeal(new Deal("K001", "Obba Jjajang Deal Set", "2 person set meal of your jjajangmyeon! Original @ $15 each", new Date(), result2, 50, BigDecimal.valueOf(20)), c4.getCategoryId(), tags1, b2);
-            Deal d3 = dealSessionBean.createNewDeal(new Deal("N001", "Koka Instant Noodle Packet (6's)", "Spicy Singaporean Fried Noodles", new Date(), result3, 300, BigDecimal.valueOf(3)), c6.getCategoryId(), tags2, b3);
+            Deal d1 = dealSessionBean.createNewDeal(new Deal("Z001", "Converse Sneakers", "Chuck Taylor All Star", new Date(), result, 100, BigDecimal.valueOf(45), 100), subCatShopping.getCategoryId(), tags1, b1);
+            Deal d2 = dealSessionBean.createNewDeal(new Deal("K001", "Obba Jjajang Deal Set", "2 person set meal of your jjajangmyeon! Original @ $15 each", new Date(), result2, 50, BigDecimal.valueOf(20), 50), subCatChinese.getCategoryId(), tags1, b2);
+            Deal d3 = dealSessionBean.createNewDeal(new Deal("N001", "Koka Instant Noodle Packet (6's)", "Spicy Singaporean Fried Noodles", new Date(), result3, 300, BigDecimal.valueOf(3), 300), subCatShopping.getCategoryId(), tags2, b3);
             
             Long cust1 = customerSessionBean.createCustomer(new Customer("Jia Wen", "Lee", BigDecimal.ZERO, "jiawen", "password", "leejiawen98@gmail.com", "97716383"));
             Long cust2 = customerSessionBean.createCustomer(new Customer("Stella", "Ang", BigDecimal.ZERO, "stella", "password", "stella98@gmail.com", "83746343"));
@@ -213,6 +231,7 @@ public class DataInitializationSessionBean {
             saleTransactionSessionBean.createNewSaleTransaction(4l, new SaleTransaction(d1.getUnitPrice(), BigDecimal.valueOf(2).multiply(d1.getUnitPrice()), result4, 2), d1.getDealId());
             saleTransactionSessionBean.createNewSaleTransaction(4l, new SaleTransaction(d1.getUnitPrice(), BigDecimal.valueOf(5).multiply(d1.getUnitPrice()), result6, 5), d1.getDealId());
             saleTransactionSessionBean.createNewSaleTransaction(5l, new SaleTransaction(d2.getUnitPrice(), BigDecimal.valueOf(4).multiply(d1.getUnitPrice()),  result4, 4), d2.getDealId());
+            
         }
         catch (CreateNewSaleTransactionException | CustomerNotFoundException | DealNotFoundException ex)
         {

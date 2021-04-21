@@ -87,6 +87,7 @@ public class CreateDealListingsManagedBean {
 //        is.read(qrImg);
         
         try {
+            newDeal.setOriginalQuantity(newDeal.getQuantityLeft());
             Deal deal = dealSessionBeanLocal.createNewDeal(newDeal, newCategoryId, newTagIds, business.getId());
             
             newDeal = new Deal();

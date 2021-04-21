@@ -52,4 +52,6 @@ public interface DealSessionBeanLocal {
     public List<Deal> retrieveDealByBusinessId(Long businessId);
     
     public Deal updateDealStatus(Deal deal) throws DealNotFoundException;
+
+    public List<Deal> retrievePurchasedDealsByCustIdandBizId(Long custId, Long bizId);
 }

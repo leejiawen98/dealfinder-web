@@ -36,5 +36,9 @@ public interface SaleTransactionSessionBeanLocal {
     
     public List<SaleTransaction> retrieveSaleTransactionDealByBusinessId(Long businessId) throws BusinessNotFoundException;
     
+    public List<SaleTransaction> retrieveSaleTransactionDealByCustomerId(Long customerId) throws CustomerNotFoundException;
+    
     public List<SaleTransaction> retrieveSaleTransactionDealByBusinessAndMonth(Long businessId, String month) throws BusinessNotFoundException;
+
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessAndMonthndDeal(Long businessId, String month, Long dealId) throws BusinessNotFoundException;
 }

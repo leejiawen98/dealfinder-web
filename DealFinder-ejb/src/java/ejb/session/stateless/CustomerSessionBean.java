@@ -7,8 +7,13 @@ package ejb.session.stateless;
 
 import entity.Business;
 import entity.Customer;
+import entity.Deal;
+import entity.Favourite;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -23,6 +28,7 @@ import javax.validation.ValidatorFactory;
 import util.exception.BusinessNotFoundException;
 import util.exception.CustomerNotFoundException;
 import util.exception.CustomerUsernameExistException;
+import util.exception.DealNotFoundException;
 import util.exception.DeleteCustomerException;
 import util.exception.InputDataValidationException;
 import util.exception.InvalidLoginCredentialException;
@@ -37,6 +43,9 @@ import util.security.CryptographicHelper;
  */
 @Stateless
 public class CustomerSessionBean implements CustomerSessionBeanLocal {
+
+    @EJB(name = "DealSessionBeanLocal")
+    private DealSessionBeanLocal dealSessionBeanLocal;
 
     @PersistenceContext(unitName = "DealFinder-ejbPU")
     private EntityManager em;
@@ -90,7 +99,7 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
         if (customer != null) {
             customer.getCreditCard();
             customer.getDeals().size();
-            customer.getFavDeals().size();
+            customer.getFavourites().size();
 
             return customer;
         } else {
@@ -107,8 +116,9 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
             Customer customer = (Customer) query.getSingleResult();
             customer.getCreditCard();
             customer.getDeals().size();
-            customer.getFavDeals().size();
+            customer.getFavourites().size();
             customer.getSaleTransactions().size();
+            customer.getRedemptions().size();
 
             return customer;
 
@@ -122,7 +132,8 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
         try {
             Customer customer = getCustomerByUsername(username);
             String passwordHash = CryptographicHelper.getInstance().byteArrayToHexString(CryptographicHelper.getInstance().doMD5Hashing(password + customer.getSalt()));
-
+             System.err.println("password hash: " + passwordHash);
+             System.err.println("customer password hash:" + customer.getPassword());
             if (customer.getPassword().equals(passwordHash)) {
                 return customer;
 
@@ -148,12 +159,13 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
                     customerToUpdate.setFirstName(customer.getFirstName());
                     customerToUpdate.setLastName(customer.getLastName());
                     customerToUpdate.setMobileNum(customer.getMobileNum());
+                    customerToUpdate.seteWalletAmount(customer.geteWalletAmount());
 
                 } else {
                     throw new UpdateCustomerException("Username of customer record to be updated does not match the existing record");
                 }
             } else {
-                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations)); 
+                throw new InputDataValidationException(prepareInputDataValidationErrorsMessage(constraintViolations));
             }
         } else {
             throw new CustomerNotFoundException("Customer ID not provided for customer to be updated");
@@ -163,15 +175,15 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
     @Override
     public void deleteCustomer(Long customerId) throws CustomerNotFoundException, DeleteCustomerException {
         Customer customerToRemove = getCustomerByCustomerId(customerId);
-        
-        if(customerToRemove.getSaleTransactions().isEmpty()){
+
+        if (customerToRemove.getSaleTransactions().isEmpty()) {
             customerToRemove.getCreditCard().setCustomer(null);
-            customerToRemove.getFavDeals().remove(customerToRemove);
+            customerToRemove.getFavourites().remove(customerToRemove);
             customerToRemove.getDeals().remove(customerToRemove);
             em.remove(customerToRemove);
         } else {
             throw new DeleteCustomerException("Customer ID " + customerId + " is associated with existing sale transaction(s) and cannot be deleted!");
-        
+
         }
     }
 
@@ -184,5 +196,6 @@ public class CustomerSessionBean implements CustomerSessionBeanLocal {
 
         return msg;
     }
+
 
 }

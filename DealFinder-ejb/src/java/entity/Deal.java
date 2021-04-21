@@ -59,47 +59,51 @@ public class Deal implements Serializable {
     @Column(nullable = false)
     @Min(0)
     private Integer quantityLeft;
+    @Column(nullable = false)
+    @Min(0)
+    private Integer originalQuantity;
     @Column(nullable = false, precision = 7, scale = 2)
     private BigDecimal unitPrice;
-   
-    private boolean redeemed;
+
     private boolean enabled;
-    
-    
+
     @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
     private List<SaleTransaction> saleTransactions;
-    
+
     @ManyToMany(mappedBy = "deals", fetch = FetchType.LAZY)
     private List<Tag> tags;
-    
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Category category;
-    
-    @ManyToMany(mappedBy = "favDeals", fetch = FetchType.LAZY)
-    private List<Customer> favCustomers;
-    
+
     @ManyToMany(mappedBy = "deals", fetch = FetchType.LAZY)
     private List<Customer> customers;
-    
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Business business;
-    
+
     @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
     private List<Review> reviews;
-    
+
+    @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
+    private List<Redemption> redemptions;
+
+    @OneToMany(mappedBy = "deal", fetch = FetchType.LAZY)
+    private List<Favourite> favourites;
+
     public Deal() {
+        favourites = new ArrayList<>();
         saleTransactions = new ArrayList<>();
         tags = new ArrayList<>();
-        favCustomers = new ArrayList<>();
         customers = new ArrayList<>();
         reviews = new ArrayList<>();
+        redemptions = new ArrayList<>();
         enabled = true;
-        redeemed = false;
     }
 
-    public Deal(String serialNum, String dealName, String description, Date startDateTime, Date endDateTime, Integer quantityLeft, BigDecimal unitPrice) {
+    public Deal(String serialNum, String dealName, String description, Date startDateTime, Date endDateTime, Integer quantityLeft, BigDecimal unitPrice, Integer originalQuantity) {
         this();
         this.serialNum = serialNum;
         this.dealName = dealName;
@@ -108,6 +112,7 @@ public class Deal implements Serializable {
         this.endDateTime = endDateTime;
         this.quantityLeft = quantityLeft;
         this.unitPrice = unitPrice;
+        this.originalQuantity = originalQuantity;
     }
 
     @Override
@@ -134,7 +139,7 @@ public class Deal implements Serializable {
     public String toString() {
         return "entity.Deal[ id=" + dealId + " ]";
     }
-    
+
     public Long getDealId() {
         return dealId;
     }
@@ -215,14 +220,6 @@ public class Deal implements Serializable {
         this.category = category;
     }
 
-    public List<Customer> getFavCustomers() {
-        return favCustomers;
-    }
-
-    public void setFavCustomers(List<Customer> favCustomers) {
-        this.favCustomers = favCustomers;
-    }
-
     public List<Customer> getCustomers() {
         return customers;
     }
@@ -246,33 +243,25 @@ public class Deal implements Serializable {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
-    
-    public void addTag(Tag tag)
-    {
-        if(tag != null)
-        {
-            if(!this.tags.contains(tag))
-            {
+
+    public void addTag(Tag tag) {
+        if (tag != null) {
+            if (!this.tags.contains(tag)) {
                 this.tags.add(tag);
-                
-                if(!tag.getDeals().contains(this))
-                {                    
+
+                if (!tag.getDeals().contains(this)) {
                     tag.getDeals().add(this);
                 }
             }
         }
     }
-       
-    public void removeTag(Tag tag)
-    {
-        if(tag != null)
-        {
-            if(this.tags.contains(tag))
-            {
+
+    public void removeTag(Tag tag) {
+        if (tag != null) {
+            if (this.tags.contains(tag)) {
                 this.tags.remove(tag);
-                
-                if(tag.getDeals().contains(this))
-                {
+
+                if (tag.getDeals().contains(this)) {
                     tag.getDeals().remove(this);
                 }
             }
@@ -295,14 +284,28 @@ public class Deal implements Serializable {
         this.enabled = enabled;
     }
 
-    public boolean isRedeemed() {
-        return redeemed;
+    public List<Redemption> getRedemptions() {
+        return redemptions;
     }
 
-    public void setRedeemed(boolean redeemed) {
-        this.redeemed = redeemed;
+    public void setRedemptions(List<Redemption> redemptions) {
+        this.redemptions = redemptions;
     }
-    
-    
-    
+
+    public Integer getOriginalQuantity() {
+        return originalQuantity;
+    }
+
+    public void setOriginalQuantity(Integer originalQuantity) {
+        this.originalQuantity = originalQuantity;
+    }
+
+    public List<Favourite> getFavourites() {
+        return favourites;
+    }
+
+    public void setFavourites(List<Favourite> favourites) {
+        this.favourites = favourites;
+    }
+
 }

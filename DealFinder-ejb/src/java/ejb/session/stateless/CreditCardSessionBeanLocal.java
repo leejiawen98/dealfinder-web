@@ -10,6 +10,7 @@ import javax.ejb.Local;
 import util.exception.CreateNewCreditCardException;
 import util.exception.CreditCardNotFoundException;
 import util.exception.InputDataValidationException;
+import util.exception.UpdateCreditCardException;
 
 /**
  *
@@ -22,6 +23,8 @@ public interface CreditCardSessionBeanLocal {
     public CreditCard retrieveCreditCardByCreditCardId(Long creditCardId) throws CreditCardNotFoundException;
     
     public CreditCard retrieveCreditCardByCustomerId(Long customerId) throws CreditCardNotFoundException;
+    
+    public CreditCard updateCreditCard(CreditCard creditCard) throws CreditCardNotFoundException, InputDataValidationException, UpdateCreditCardException;
     
     public void deleteCreditCard(Long creditCardId) throws CreditCardNotFoundException;
     

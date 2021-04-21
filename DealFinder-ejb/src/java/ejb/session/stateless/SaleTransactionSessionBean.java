@@ -65,6 +65,12 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
                 newSaleTransactionEntity.setDeal(deal);
                 deal.getSaleTransactions().add(newSaleTransactionEntity);
                 
+                if (!customerEntity.getDeals().contains(deal))
+                {
+                    customerEntity.getDeals().add(deal);
+                    customerEntity.setDeals(customerEntity.getDeals());
+                }
+
                 dealSessionBeanLocal.debitQtyOnHand(newSaleTransactionEntity.getDeal().getDealId(), newSaleTransactionEntity.getQuantity());
                 
                 em.persist(newSaleTransactionEntity);
@@ -202,30 +208,49 @@ public class SaleTransactionSessionBean implements SaleTransactionSessionBeanLoc
         }
     }
     
-//    @Override
-//    public void voidRefundSaleTransaction(Long saleTransactionId) throws SaleTransactionNotFoundException, SaleTransactionAlreadyVoidedRefundedException
-//    {
-//        SaleTransaction saleTransactionEntity = retrieveSaleTransactionBySaleTransactionId(saleTransactionId);
-//        
-//        if(!saleTransactionEntity.getVoidRefund())
-//        {
-//            for(SaleTransactionLineItemEntity saleTransactionLineItemEntity:saleTransactionEntity.getSaleTransactionLineItemEntities())
-//            {
-//                try
-//                {
-//                    productEntitySessionBeanLocal.creditQuantityOnHand(saleTransactionLineItemEntity.getProductEntity().getProductId(), saleTransactionLineItemEntity.getQuantity());
-//                }
-//                catch(ProductNotFoundException ex)
-//                {
-//                    ex.printStackTrace(); // Ignore exception since this should not happen
-//                }                
-//            }
-//            
-//            saleTransactionEntity.setVoidRefund(true);
-//        }
-//        else
-//        {
-//            throw new SaleTransactionAlreadyVoidedRefundedException("The sale transaction has aready been voided/refunded");
-//        }
-//    }
+    @Override
+    public List<SaleTransaction> retrieveSaleTransactionDealByCustomerId(Long customerId) throws CustomerNotFoundException
+    {
+        Query query = em.createQuery("SELECT st FROM SaleTransaction st WHERE st.user.id =:inCustomerId");
+        query.setParameter("inCustomerId", customerId);
+
+        try {
+            return query.getResultList();
+
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new CustomerNotFoundException("Customer Id " + customerId + " does not exist!");
+        }
+    }
+    
+    @Override
+    public List<SaleTransaction> retrieveSaleTransactionDealByBusinessAndMonthndDeal(Long businessId, String month, Long dealId) throws BusinessNotFoundException
+    {
+        HashMap<String,Integer> hm = new HashMap<String, Integer>();
+        hm.put("January", 1);
+        hm.put("February", 2);
+        hm.put("March", 3);
+        hm.put("April", 4);
+        hm.put("May", 5);
+        hm.put("June", 6);
+        hm.put("July", 7);
+        hm.put("August", 8);
+        hm.put("September", 9);
+        hm.put("October", 10);
+        hm.put("November", 11);
+        hm.put("December", 12);
+        
+        int m = hm.get(month);
+        
+        Query query = em.createQuery("SELECT st FROM SaleTransaction st WHERE st.deal.business.id =:inBusinessId and st.deal.dealId =:inDealId and EXTRACT(MONTH FROM st.transactionDateTime) =:inM");
+        query.setParameter("inBusinessId", businessId);
+        query.setParameter("inDealId", dealId);
+        query.setParameter("inM", m);
+
+        try {
+            return query.getResultList();
+
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new BusinessNotFoundException("Business Id " + businessId + " does not exist!");
+        }
+    }
 }

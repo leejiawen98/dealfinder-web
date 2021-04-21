@@ -12,6 +12,10 @@ import util.exception.BusinessNotFoundException;
 import util.exception.CreateNewReviewException;
 import util.exception.DealNotFoundException;
 import util.exception.DeleteReviewException;
+import util.exception.InputDataValidationException;
+import util.exception.ReviewExistException;
+import util.exception.ReviewNotFoundException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -20,14 +24,18 @@ import util.exception.DeleteReviewException;
 @Local
 public interface ReviewSessionBeanLocal {
 
-    public Review createNewReview(Long customerId, Review newReview, Long dealId) throws CreateNewReviewException;
-
+    public Review createNewReview(Review newReview, Long dealId, Long customerId) throws ReviewExistException, UnknownPersistenceException, InputDataValidationException, CreateNewReviewException;
+    
     public List<Review> retrieveAllReviews();
-
+    
+    public Review retrieveReviewByReviewId(Long reviewId) throws ReviewNotFoundException;
+    
     public List<Review> retrieveReviewsByDealId(Long dealId) throws DealNotFoundException;
-
-    public void deleteReview(Review review) throws DeleteReviewException;
-
+    
+    public void updateReview(Review review) throws ReviewNotFoundException, InputDataValidationException;
+    
     public List<Review> retrieveReviewByBusinessId(Long businessId) throws BusinessNotFoundException;
+
+    public void deleteReview(Long reviewId) throws ReviewNotFoundException;
     
 }
